@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ARхипелаг — национальная цифровая туристическая экосистема">
+    <title>ARхипелаг | Системы Ковчег</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #121212;
+            --text-primary: #EAEAEA;
+            --text-secondary: #888888;
+            --accent: #6366F1;
+            --accent-glow: rgba(99, 102, 241, 0.3);
+            --border: #2A2A2A;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 1s ease-out forwards;
+            opacity: 0;
+        }
+
+        .fade-in-delay-1 { animation-delay: 0.2s; }
+        .fade-in-delay-2 { animation-delay: 0.4s; }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--text-primary);
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .tagline {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .hero .description {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .module-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .module-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .module-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .module-card h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .module-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .module-features {
+            list-style: none;
+            padding: 0;
+        }
+
+        .module-features li {
+            color: var(--text-secondary);
+            padding: 0.3rem 0;
+            font-size: 0.9rem;
+        }
+
+        .module-features li::before {
+            content: '✓ ';
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .benefit-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .benefit-card h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .benefit-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .benefit-card li {
+            color: var(--text-secondary);
+            padding: 0.5rem 0;
+        }
+
+        .benefit-card li::before {
+            content: '• ';
+            color: var(--accent);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .stat-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin: 3rem 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: 2px solid var(--accent);
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: var(--accent);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">СИСТЕМЫ <span>КОВЧЕГ</span></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="barabashka.html">Barabashka</a></li>
+                <li><a href="arhipelag.html">ARхипелаг</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="fade-in">🗺️ ARхипелаг</h1>
+            <p class="tagline fade-in fade-in-delay-1">Национальная цифровая туристическая экосистема</p>
+            <p class="description fade-in fade-in-delay-2">
+                Единая цифровая инфраструктура для путешествий по России — от Калининграда до Камчатки. 
+                8 модулей в одном приложении.
+            </p>
+        </div>
+    </section>
+
+    <section>
+        <h2 class="section-title">8 ключевых модулей</h2>
+        <div class="modules-grid">
+            <div class="module-card">
+                <div class="module-number">01</div>
+                <h3>AI-помощник</h3>
+                <p>Персональный гид, который строит маршруты и отвечает на вопросы 24/7</p>
+                <ul class="module-features">
+                    <li>Маршруты с учётом интересов и погоды</li>
+                    <li>Корректировка планов в реальном времени</li>
+                    <li>Ответы о достопримечательностях и транспорте</li>
+                </ul>
+            </div>
+
+            <div class="module-card">
+                <div class="module-number">02</div>
+                <h3>Travel-соцсеть</h3>
+                <p>Пространство для общения путешественников</p>
+                <ul class="module-features">
+                    <li>Публикации с геотегами</li>
+                    <li>Отзывы о локациях</li>
+                    <li>Поиск попутчиков</li>
+                </ul>
+            </div>
+
+            <div class="module-card">
+                <div class="module-number">03</div>
+                <h3>Карты и маршруты</h3>
+                <p>Навигация с расширенным функционалом</p>
+                <ul class="module-features">
+                    <li>Офлайн-доступ</li>
+                    <li>Динамическая навигация</li>
+                    <li>Учёт пробок и загруженности</li>
+                </ul>
+            </div>
+
+            <div class="module-card">
+                <div class="module-number">04</div>
+                <h3>AR-путеводитель</h3>
+                <p>Интерактивное взаимодействие с пространством</p>
+                <ul class="module-features">
+                    <li>Визуализация исторических событий</li>
+                    <li>3D-модели утраченных объектов</li>
+                    <li>Подсказки о nearby сервисах</li>
+                </ul>
+            </div>
+
+            <div class="module-card">
+                <div class="module-number">05</div>
+                <h3>Система общения</h3>
+                <p>Единая среда для связи</p>
+                <ul class="module-features">
+                    <li>Чаты с гидами и туроператорами</li>
+                    <li>Групповые обсуждения</li>
+                    <li>Уведомления от служб</li>
+                </ul>
+            </div>
+
+            <div class="module-card">
+                <div class="module-number">06</div>
+                <h3>Smart-рекомендации</h3>
+                <p>Умные подсказки на основе AI</p>
+                <ul class="module-features">
+                    <li>Подборки кафе по бюджету</li>
+                    <li>Активности для разных компаний</li>
+                    <li>События в регионе</li>
+                </ul>
+            </div>
+
+            <div class="module-card">
+                <div class="module-number">07</div>
+                <h3>Цифровой паспорт</h3>
+                <p>Личный кабинет путешественника</p>
+                <ul class="module-features">
+                    <li>Билеты и бронирования</li>
+                    <li>Достижения и награды</li>
+                    <li>Бонусы от партнёров</li>
+                </ul>
+            </div>
+
+            <div class="module-card">
+                <div class="module-number">08</div>
+                <h3>Платформа впечатлений</h3>
+                <p>Бронирование уникальных активностей</p>
+                <ul class="module-features">
+                    <li>Мастер-классы ремесленников</li>
+                    <li>Гастрономические туры</li>
+                    <li>Экспедиции и квесты</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2 class="section-title">Польза для всех участников</h2>
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <h3>👤 Для пользователей</h3>
+                <ul>
+                    <li>Единый интерфейс вместо 10+ приложений</li>
+                    <li>Персонализация на базе AI</li>
+                    <li>Геймификация и AR</li>
+                    <li>Безопасность 24/7</li>
+                    <li>Живое общение с попутчиками</li>
+                </ul>
+            </div>
+
+            <div class="benefit-card">
+                <h3>🏢 Для бизнеса</h3>
+                <ul>
+                    <li>Доступ к целевой аудитории</li>
+                    <li>Аналитика в реальном времени</li>
+                    <li>Встроенные рекламные модули</li>
+                    <li>Автоматизация бронирования</li>
+                    <li>Интеграция с CRM</li>
+                </ul>
+            </div>
+
+            <div class="benefit-card">
+                <h3>🏛️ Для регионов</h3>
+                <ul>
+                    <li>Развитие малоизвестных локаций</li>
+                    <li>Рост доходов от туризма</li>
+                    <li>Создание рабочих мест</li>
+                    <li>Укрепление имиджа региона</li>
+                    <li>Данные для стратегического планирования</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2 class="section-title">Стратегическое значение</h2>
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">+35%</div>
+                <div class="stat-label">Рост турпотока за 3 года</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">85+</div>
+                <div class="stat-label">Регионов в экосистеме</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">50K+</div>
+                <div class="stat-label">Новых рабочих мест</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">+20%</div>
+                <div class="stat-label">Рост налоговых поступлений</div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="cta-section">
+            <h2 class="section-title">Партнёрство и инвестиции</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                ARхипелаг открыт для стратегического партнёрства с регионами, туроператорами и инвесторами. 
+                Запросите полную презентацию проекта.
+            </p>
+            <a href="mailto:hello@kovcheg-systems.ru" class="btn btn-primary">Связаться с нами</a>
+            <a href="index.html" class="btn btn-secondary">На главную</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2024–2026 Системы Ковчег (Kovcheg Systems). Все права защищены.</p>
+        <p style="margin-top: 0.5rem; font-style: italic;">Сквозь горизонт, сквозь время!</p>
+    </footer>
+</body>
+</html>
