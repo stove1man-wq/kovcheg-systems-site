@@ -5,13 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Системы Ковчег — разработка искусственного интеллекта, цифровых экосистем и робототехнических решений">
     <title>Системы Ковчег | Kovcheg Systems</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
+    <!-- 1. FAVICON (Иконка во вкладке) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230A0A0A%22/><text x=%2250%22 y=%2265%22 font-family=%22Arial%22 font-size=%2250%22 font-weight=%22bold%22 fill=%22%236366F1%22 text-anchor=%22middle%22>К</text></svg>">
+
+    <!-- 2. OPEN GRAPH (Красивые превью в мессенджерах) -->
+    <meta property="og:title" content="Системы Ковчег | Kovcheg Systems">
+    <meta property="og:description" content="Сквозь горизонт, сквозь время! Создаем AI, цифровые экосистемы и робототехнику.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kovcheg-systems.ru">
+    <meta property="og:site_name" content="Системы Ковчег">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --bg-primary: #0A0A0A;
             --bg-secondary: #121212;
@@ -21,7 +27,6 @@
             --accent-glow: rgba(99, 102, 241, 0.3);
             --border: #2A2A2A;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: var(--bg-primary);
@@ -30,353 +35,107 @@
             overflow-x: hidden;
         }
 
-        /* Анимация появления */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px var(--accent-glow); }
-            50% { box-shadow: 0 0 40px var(--accent-glow), 0 0 60px var(--accent-glow); }
-        }
-
-        .fade-in {
-            animation: fadeInUp 1s ease-out forwards;
+        /* 3. АНИМАЦИЯ ПРОЯВЛЕНИЯ ИЗ ТУМАНА */
+        .reveal {
             opacity: 0;
+            filter: blur(10px);
+            transform: translateY(40px);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            filter: blur(0px);
+            transform: translateY(0);
         }
 
-        .fade-in-delay-1 { animation-delay: 0.2s; }
-        .fade-in-delay-2 { animation-delay: 0.4s; }
-        .fade-in-delay-3 { animation-delay: 0.6s; }
-
-        /* Навигация */
         nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(10px);
+            position: fixed; top: 0; width: 100%;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
-            z-index: 1000;
-            padding: 1rem 0;
+            z-index: 1000; padding: 1rem 0;
         }
-
         .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center;
         }
+        .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: 1px; color: var(--text-primary); }
+        .logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s; font-size: 0.95rem; }
+        .nav-links a:hover { color: var(--accent); }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: var(--text-primary);
-        }
-
-        .logo span {
-            color: var(--accent);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.3s;
-            font-size: 0.95rem;
-        }
-
-        .nav-links a:hover {
-            color: var(--accent);
-        }
-
-        /* Hero секция */
         .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 2rem;
-            position: relative;
-            overflow: hidden;
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            text-align: center; padding: 2rem; position: relative; overflow: hidden;
         }
-
         .hero::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 600px;
-            height: 600px;
+            content: ''; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); width: 600px; height: 600px;
             background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-            opacity: 0.3;
-            animation: pulse 4s ease-in-out infinite;
+            opacity: 0.3; animation: pulse 4s ease-in-out infinite;
         }
-
         @keyframes pulse {
             0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
             50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.5; }
         }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 800px;
-        }
-
+        .hero-content { position: relative; z-index: 1; max-width: 800px; }
         .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 800;
-            letter-spacing: 2px;
-            margin-bottom: 1rem;
+            font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800; letter-spacing: 2px; margin-bottom: 1rem;
             background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
+        .hero .tagline { font-size: clamp(1.2rem, 3vw, 1.8rem); color: var(--text-secondary); font-style: italic; margin-bottom: 2rem; }
+        .hero .description { font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 3rem; }
 
-        .hero .tagline {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
-            color: var(--text-secondary);
-            font-style: italic;
-            margin-bottom: 2rem;
-        }
-
-        .hero .description {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 3rem;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
+        .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
         .btn {
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            display: inline-block;
+            padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s; display: inline-block; border: none; cursor: pointer; font-size: 1rem;
         }
+        .btn-primary { background: var(--accent); color: white; border: 2px solid var(--accent); }
+        .btn-primary:hover { background: transparent; color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
+        .btn-secondary { background: transparent; color: var(--text-primary); border: 2px solid var(--border); }
+        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
 
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-            border: 2px solid var(--accent);
-        }
+        section { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .section-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; text-align: center; }
+        .section-subtitle { font-size: 1.2rem; color: var(--text-secondary); text-align: center; margin-bottom: 4rem; max-width: 600px; margin-left: auto; margin-right: auto; }
 
-        .btn-primary:hover {
-            background: transparent;
-            color: var(--accent);
-            animation: glow 2s infinite;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--text-primary);
-            border: 2px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        /* Секции */
-        section {
-            padding: 6rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .section-subtitle {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            text-align: center;
-            margin-bottom: 4rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Проекты */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
         .project-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 2rem;
-            transition: all 0.3s;
+            background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; transition: all 0.3s;
         }
+        .project-card:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(99, 102, 241, 0.15); }
+        .project-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .project-card h3 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--accent); }
+        .project-card p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+        .project-features { list-style: none; margin-bottom: 1.5rem; }
+        .project-features li { padding: 0.5rem 0; color: var(--text-secondary); font-size: 0.95rem; }
+        .project-features li::before { content: '✓ '; color: var(--accent); font-weight: bold; }
 
-        .project-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+        .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 3rem; }
+        .tech-item { text-align: center; padding: 2rem; background: var(--bg-secondary); border-radius: 12px; border: 1px solid var(--border); }
+        .tech-item h4 { color: var(--accent); margin: 1rem 0; font-size: 1.2rem; }
+        .tech-item p { color: var(--text-secondary); font-size: 0.95rem; }
+
+        /* 4. ФОРМА ОБРАТНОЙ СВЯЗИ */
+        .contact-form-container {
+            background: var(--bg-secondary); border-radius: 12px; padding: 4rem 2rem; border: 1px solid var(--border); max-width: 600px; margin: 0 auto;
         }
-
-        .project-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+        .form-group { margin-bottom: 1.5rem; text-align: left; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.9rem; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 1rem; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 1rem; transition: border-color 0.3s;
         }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); }
+        .form-group textarea { resize: vertical; min-height: 120px; }
 
-        .project-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--accent);
-        }
+        footer { text-align: center; padding: 2rem; border-top: 1px solid var(--border); color: var(--text-secondary); font-size: 0.9rem; }
 
-        .project-card p {
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-        }
-
-        .project-features {
-            list-style: none;
-            margin-bottom: 1.5rem;
-        }
-
-        .project-features li {
-            padding: 0.5rem 0;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
-
-        .project-features li::before {
-            content: '✓ ';
-            color: var(--accent);
-            font-weight: bold;
-        }
-
-        /* Технологии */
-        .tech-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .tech-item {
-            text-align: center;
-            padding: 2rem;
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            border: 1px solid var(--border);
-        }
-
-        .tech-item h4 {
-            color: var(--accent);
-            margin: 1rem 0;
-            font-size: 1.2rem;
-        }
-
-        .tech-item p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
-
-        /* Контакты */
-        .contact {
-            text-align: center;
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 4rem 2rem;
-            border: 1px solid var(--border);
-        }
-
-        .contact-info {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            flex-wrap: wrap;
-            margin-top: 2rem;
-        }
-
-        .contact-item {
-            color: var(--text-secondary);
-        }
-
-        .contact-item a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        .contact-item a:hover {
-            text-decoration: underline;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 2rem;
-            border-top: 1px solid var(--border);
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        /* Адаптивность */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .contact-info {
-                flex-direction: column;
-                gap: 1rem;
-            }
-        }
+        @media (max-width: 768px) { .nav-links { display: none; } .hero h1 { font-size: 2rem; } .section-title { font-size: 2rem; } }
     </style>
 </head>
 <body>
-    <!-- Навигация -->
     <nav>
         <div class="nav-container">
             <div class="logo">СИСТЕМЫ <span>КОВЧЕГ</span></div>
@@ -389,60 +148,33 @@
         </div>
     </nav>
 
-    <!-- Hero секция -->
     <section class="hero">
-        <div class="hero-content">
-            <h1 class="fade-in">СИСТЕМЫ КОВЧЕГ</h1>
-            <p class="tagline fade-in fade-in-delay-1">Сквозь горизонт, сквозь время!</p>
-            <p class="description fade-in fade-in-delay-2">
-                Мы создаем искусственный интеллект, цифровые экосистемы и робототехнические решения, 
-                которые работают всегда и везде. Даже там, где нет интернета.
-            </p>
-            <div class="cta-buttons fade-in fade-in-delay-3">
+        <div class="hero-content reveal">
+            <h1>СИСТЕМЫ КОВЧЕГ</h1>
+            <p class="tagline">Сквозь горизонт, сквозь время!</p>
+            <p class="description">Мы создаем искусственный интеллект, цифровые экосистемы и робототехнические решения, которые работают всегда и везде. Даже там, где нет интернета.</p>
+            <div class="cta-buttons">
                 <a href="#projects" class="btn btn-primary">Наши проекты</a>
                 <a href="#contact" class="btn btn-secondary">Связаться</a>
             </div>
         </div>
     </section>
 
-    <!-- О компании -->
-    <section id="about">
+    <section id="about" class="reveal">
         <h2 class="section-title">О компании</h2>
-        <p class="section-subtitle">
-            Российская инновационная компания, создающая сквозные цифровые и робототехнические решения. 
-            Наши системы работают там, где другие сдаются.
-        </p>
+        <p class="section-subtitle">Российская инновационная компания, создающая сквозные цифровые и робототехнические решения. Наши системы работают там, где другие сдаются.</p>
         <div class="tech-grid">
-            <div class="tech-item">
-                <div style="font-size: 2.5rem;">🔒</div>
-                <h4>Автономность</h4>
-                <p>Критически важные функции работают без интернета</p>
-            </div>
-            <div class="tech-item">
-                <div style="font-size: 2.5rem;">🛡️</div>
-                <h4>Приватность</h4>
-                <p>Данные пользователя принадлежат только пользователю</p>
-            </div>
-            <div class="tech-item">
-                <div style="font-size: 2.5rem;">🤖</div>
-                <h4>AI + Робототехника</h4>
-                <p>Синергия цифрового и физического мира</p>
-            </div>
-            <div class="tech-item">
-                <div style="font-size: 2.5rem;">🌐</div>
-                <h4>Глубокая локализация</h4>
-                <p>От Калининграда до Камчатки</p>
-            </div>
+            <div class="tech-item"><div style="font-size: 2.5rem;">🔒</div><h4>Автономность</h4><p>Критически важные функции работают без интернета</p></div>
+            <div class="tech-item"><div style="font-size: 2.5rem;">🛡️</div><h4>Приватность</h4><p>Данные пользователя принадлежат только пользователю</p></div>
+            <div class="tech-item"><div style="font-size: 2.5rem;">🤖</div><h4>AI + Робототехника</h4><p>Синергия цифрового и физического мира</p></div>
+            <div class="tech-item"><div style="font-size: 2.5rem;">🌐</div><h4>Глубокая локализация</h4><p>От Калининграда до Камчатки</p></div>
         </div>
     </section>
 
-    <!-- Проекты -->
-    <section id="projects">
+    <section id="projects" class="reveal">
         <h2 class="section-title">Наши проекты</h2>
         <p class="section-subtitle">Экосистема решений для цифровой трансформации России</p>
-        
         <div class="projects-grid">
-            <!-- Barabashka -->
             <div class="project-card">
                 <div class="project-icon">🦊</div>
                 <h3>Barabashka</h3>
@@ -452,12 +184,9 @@
                     <li>Мгновенное выполнение команд</li>
                     <li>Живой 3D-аватар с характером</li>
                     <li>Интеграция с такси, мессенджерами</li>
-                    <li>Работает на Android и Windows</li>
                 </ul>
-                <a href="https://github.com/stove1man-wq/Barabashka" class="btn btn-secondary" target="_blank">GitHub</a>
+                <a href="barabashka.html" class="btn btn-secondary">Подробнее</a>
             </div>
-
-            <!-- ARхипелаг -->
             <div class="project-card">
                 <div class="project-icon">🗺️</div>
                 <h3>ARхипелаг</h3>
@@ -466,109 +195,78 @@
                     <li>8 модулей в одном приложении</li>
                     <li>AI-гид и офлайн-карты</li>
                     <li>AR-путеводители</li>
-                    <li>Travel-соцсеть</li>
                     <li>Аналитика для регионов</li>
                 </ul>
-                <a href="#contact" class="btn btn-secondary">Запросить презентацию</a>
+                <a href="arhipelag.html" class="btn btn-secondary">Подробнее</a>
             </div>
         </div>
     </section>
 
-    <!-- Технологии -->
-    <section id="tech">
+    <section id="tech" class="reveal">
         <h2 class="section-title">Наши технологии</h2>
         <p class="section-subtitle">Технологический суверенитет и инновации</p>
-        
         <div class="tech-grid">
-            <div class="tech-item">
-                <div style="font-size: 2.5rem;">⚡</div>
-                <h4>Офлайн-First</h4>
-                <p>Архитектура, работающая без интернета</p>
-            </div>
-            <div class="tech-item">
-                <div style="font-size: 2.5rem;">🧠</div>
-                <h4>AI-ядро</h4>
-                <p>Собственные модели распознавания речи и NLP</p>
-            </div>
-            <div class="tech-item">
-                <div style="font-size: 2.5rem;">🎭</div>
-                <h4>AR/VR</h4>
-                <p>Дополненная реальность для туризма и образования</p>
-            </div>
-            <div class="tech-item">
-                <div style="font-size: 2.5rem;">🔐</div>
-                <h4>Безопасность</h4>
-                <p>Шифрование, 2FA, соответствие ФЗ-152</p>
-            </div>
+            <div class="tech-item"><div style="font-size: 2.5rem;">⚡</div><h4>Офлайн-First</h4><p>Архитектура, работающая без интернета</p></div>
+            <div class="tech-item"><div style="font-size: 2.5rem;">🧠</div><h4>AI-ядро</h4><p>Собственные модели распознавания речи и NLP</p></div>
+            <div class="tech-item"><div style="font-size: 2.5rem;">🎭</div><h4>AR/VR</h4><p>Дополненная реальность для туризма и образования</p></div>
+            <div class="tech-item"><div style="font-size: 2.5rem;">🔐</div><h4>Безопасность</h4><p>Шифрование, 2FA, соответствие ФЗ-152</p></div>
         </div>
     </section>
 
-    <!-- Контакты -->
-    <section id="contact">
-        <div class="contact">
-            <h2 class="section-title">Свяжитесь с нами</h2>
-            <p class="section-subtitle">
-                Открыты для стратегического партнерства, грантовых программ и совместной цифровизации регионов
+    <section id="contact" class="reveal">
+        <h2 class="section-title">Свяжитесь с нами</h2>
+        <p class="section-subtitle">Открыты для стратегического партнерства, грантовых программ и совместной цифровизации регионов</p>
+        
+        <div class="contact-form-container">
+            <!-- Форма Formspree -->
+            <form action="https://formspree.io/f/ВАШ_ID" method="POST">
+                <div class="form-group">
+                    <label for="name">Ваше имя</label>
+                    <input type="text" id="name" name="name" required placeholder="Иван Иванов">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email для связи</label>
+                    <input type="email" id="email" name="email" required placeholder="ivan@company.ru">
+                </div>
+                <div class="form-group">
+                    <label for="message">Сообщение или запрос</label>
+                    <textarea id="message" name="message" required placeholder="Здравствуйте, меня интересует партнерство по проекту ARхипелаг..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Отправить запрос</button>
+            </form>
+            <p style="margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-secondary); text-align: center;">
+                Или напишите нам напрямую: <a href="mailto:hello@kovcheg-systems.ru" style="color: var(--accent); text-decoration: none;">hello@kovcheg-systems.ru</a>
             </p>
-            <div class="contact-info">
-                <div class="contact-item">
-                    <strong>Email:</strong><br>
-                    <a href="mailto:hello@kovcheg-systems.ru">hello@kovcheg-systems.ru</a>
-                </div>
-                <div class="contact-item">
-                    <strong>GitHub:</strong><br>
-                    <a href="https://github.com/stove1man-wq" target="_blank">github.com/stove1man-wq</a>
-                </div>
-                <div class="contact-item">
-                    <strong>Сайт:</strong><br>
-                    <a href="https://kovcheg-systems.ru">kovcheg-systems.ru</a>
-                </div>
-            </div>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer>
         <p>© 2024–2026 Системы Ковчег (Kovcheg Systems). Все права защищены.</p>
         <p style="margin-top: 0.5rem; font-style: italic;">Сквозь горизонт, сквозь время!</p>
     </footer>
 
     <script>
-        // Плавная прокрутка для якорных ссылок
+        // Плавная прокрутка
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         });
 
-        // Анимация появления элементов при скролле
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
+        // 3. СКРИПТ АНИМАЦИИ "ПРОЯВЛЕНИЯ ИЗ ТУМАНА"
+        const observerOptions = { threshold: 0.15, rootMargin: '0px 0px -50px 0px' };
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+                    entry.target.classList.add('active');
+                    // observer.unobserve(entry.target); // Раскомментируйте, если хотите, чтобы анимация срабатывала только один раз
                 }
             });
         }, observerOptions);
 
-        document.querySelectorAll('.project-card, .tech-item').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = 'all 0.6s ease-out';
-            observer.observe(el);
-        });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     </script>
 </body>
 </html>
