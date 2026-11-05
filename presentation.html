@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARхипелаг — Презентация | Системы Ковчег</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230A0A0A%22/><text x=%2250%22 y=%2265%22 font-family=%22Arial%22 font-size=%2250%22 font-weight=%22bold%22 fill=%22%236366F1%22 text-anchor=%22middle%22>К</text></svg>">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+    --bg: #050508;
+    --bg-slide: #0A0A12;
+    --accent: #6366F1;
+    --accent-soft: rgba(99, 102, 241, 0.15);
+    --text: #EAEAEA;
+    --text-dim: #8A8A9A;
+    --border: rgba(255,255,255,0.08);
+}
+html, body { 
+    width: 100%; height: 100%; overflow: hidden; 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--text);
+}
+
+/* Слайды */
+.presentation {
+    width: 100vw; height: 100vh;
+    position: relative;
+}
+.slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    padding: 8vh 8vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s ease, visibility 0.6s;
+    background: radial-gradient(ellipse at top, #0f0f1a 0%, var(--bg) 70%);
+}
+.slide.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Навигация */
+.nav-controls {
+    position: fixed;
+    bottom: 30px; right: 30px;
+    display: flex; gap: 12px;
+    z-index: 100;
+}
+.nav-btn {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: rgba(10,10,18,0.8);
+    backdrop-filter: blur(10px);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+}
+.nav-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 20px var(--accent-soft);
+}
+.slide-counter {
+    position: fixed;
+    bottom: 35px; left: 30px;
+    font-size: 14px;
+    color: var(--text-dim);
+    font-family: "SF Mono", Monaco, monospace;
+    z-index: 100;
+}
+.slide-counter .current { color: var(--accent); font-weight: 600; }
+
+/* Типографика */
+.slide-number {
+    font-family: "SF Mono", Monaco, monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+h1 {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    letter-spacing: -1px;
+}
+h2 {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 600;
+    line-height: 1.15;
+    margin-bottom: 40px;
+    letter-spacing: -0.5px;
+}
+h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 12px;
+}
+p, li {
+    font-size: clamp(1rem, 1.8vw, 1.3rem);
+    line-height: 1.6;
+    color: var(--text-dim);
+}
+.highlight { color: var(--accent); font-weight: 600; }
+.white { color: var(--text); }
+
+/* Сетка буллитов */
+.bullets {
+    list-style: none;
+    display: grid;
+    gap: 18px;
+    margin-top: 20px;
+}
+.bullets li {
+    position: relative;
+    padding-left: 28px;
+}
+.bullets li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 12px;
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--accent);
+}
+
+/* Сетка карточек */
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 30px;
+}
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 30px;
+}
+.grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 30px;
+}
+.card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    transition: all 0.3s;
+}
+.card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+}
+.card .icon {
+    font-size: 2rem;
+    margin-bottom: 14px;
+}
+.card h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--text);
+}
+.card p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Большие цифры */
+.stat {
+    text-align: center;
+    padding: 30px 20px;
+    background: rgba(99, 102, 241, 0.05);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 16px;
+}
+.stat .number {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 12px;
+}
+.stat .label {
+    font-size: 0.95rem;
+    color: var(--text-dim);
+    line-height: 1.4;
+}
+
+/* Титульный слайд */
+.title-slide {
+    align-items: center;
+    text-align: center;
+}
+.title-slide h1 {
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 20px;
+}
+.title-slide .tagline {
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    color: var(--text-dim);
+    font-style: italic;
+    margin-bottom: 60px;
+}
+.title-slide .meta {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+.brand-line {
+    position: absolute;
+    bottom: 8vh;
+    left: 8vw; right: 8vw;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+}
+
+/* Модули */
+.module {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+.module .num {
+    font-family: "SF Mono", Monaco, monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    min-width: 40px;
+}
+.module .content h4 {
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+    color: var(--text);
+}
+.module .content p {
+    font-size: 0.85rem;
+}
+
+/* Финальный слайд */
+.final-slide {
+    align-items: center;
+    text-align: center;
+}
+.final-slide h1 {
+    font-size: clamp(3rem, 7vw, 6rem);
+    background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 30px;
+}
+
+/* Декоративные элементы */
+.glow {
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.glow.top-right { top: -200px; right: -200px; }
+.glow.bottom-left { bottom: -200px; left: -200px; }
+
+/* Адаптив для маленьких экранов */
+@media (max-width: 900px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .slide { padding: 6vh 6vw; }
+}
+</style>
+</head>
+<body>
+
+<div class="presentation">
+
+<!-- СЛАЙД 1: ТИТУЛЬНЫЙ -->
+<div class="slide title-slide active">
+    <div class="glow top-right"></div>
+    <div class="slide-number">01 / 10</div>
+    <h1>ARхипелаг</h1>
+    <p class="tagline">Национальная цифровая туристическая экосистема</p>
+    <p class="meta">Системы Ковчег · 2026</p>
+    <div class="brand-line">
+        <span>kovcheg-systems.ru</span>
+        <span>Сквозь горизонт, сквозь время</span>
+    </div>
+</div>
+
+<!-- СЛАЙД 2: ПРОБЛЕМА -->
+<div class="slide">
+    <div class="glow bottom-left"></div>
+    <div class="slide-number">02 / 10</div>
+    <h2>Туризм в России<br>нуждается в <span class="highlight">цифровой инфраструктуре</span></h2>
+    <ul class="bullets">
+        <li><span class="white">10+ приложений</span> для одного путешествия — карты, бронь, гиды, связь</li>
+        <li><span class="white">70% живописных мест</span> — без стабильного интернета</li>
+        <li><span class="white">80% туристов</span> концентрируются в 3–4 перегруженных локациях</li>
+        <li><span class="white">Регионы и бизнес</span> не имеют данных о поведении туристов в реальном времени</li>
+    </ul>
+</div>
+
+<!-- СЛАЙД 3: РЕШЕНИЕ -->
+<div class="slide">
+    <div class="glow top-right"></div>
+    <div class="slide-number">03 / 10</div>
+    <h2>ARхипелаг — <span class="highlight">всё путешествие в одном приложении</span></h2>
+    <p style="font-size: 1.4rem; max-width: 800px; margin-bottom: 40px;">
+        Единая цифровая инфраструктура для путешествий по России — от Калининграда до Камчатки.
+    </p>
+    <div class="grid-3">
+        <div class="card">
+            <div class="icon">🎯</div>
+            <h4>Для путешественника</h4>
+            <p>AI-гид, офлайн-карты, AR-путеводитель, безопасность 24/7</p>
+        </div>
+        <div class="card">
+            <div class="icon">📊</div>
+            <h4>Для бизнеса</h4>
+            <p>Прямой доступ к аудитории, аналитика, автоматизация</p>
+        </div>
+        <div class="card">
+            <div class="icon">🏛️</div>
+            <h4>Для регионов</h4>
+            <p>Перераспределение потоков, рост доходов, рабочие места</p>
+        </div>
+    </div>
+</div>
+
+<!-- СЛАЙД 4: 8 МОДУЛЕЙ (часть 1) -->
+<div class="slide">
+    <div class="slide-number">04 / 10</div>
+    <h2>8 ключевых модулей <span class="highlight">экосистемы</span></h2>
+    <div class="grid-2">
+        <div class="module">
+            <div class="num">01</div>
+            <div class="content">
+                <h4>AI-помощник</h4>
+                <p>Персональный гид: маршруты, погода, загруженность, ответы на вопросы 24/7</p>
+            </div>
+        </div>
+        <div class="module">
+            <div class="num">02</div>
+            <div class="content">
+                <h4>Travel-соцсеть</h4>
+                <p>Публикации с геотегами, отзывы, поиск попутчиков, группы по интересам</p>
+            </div>
+        </div>
+        <div class="module">
+            <div class="num">03</div>
+            <div class="content">
+                <h4>Карты и маршруты</h4>
+                <p>Офлайн-доступ, динамическая навигация, учёт пробок и загруженности</p>
+            </div>
+        </div>
+        <div class="module">
+            <div class="num">04</div>
+            <div class="content">
+                <h4>AR-путеводитель</h4>
+                <p>Визуализация истории на месте, 3D-модели утраченных объектов</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- СЛАЙД 5: 8 МОДУЛЕЙ (часть 2) -->
+<div class="slide">
+    <div class="slide-number">05 / 10</div>
+    <h2>8 ключевых модулей <span class="highlight">экосистемы</span></h2>
+    <div class="grid-2">
+        <div class="module">
+            <div class="num">05</div>
+            <div class="content">
+                <h4>Система общения</h4>
+                <p>Чаты с гидами и туроператорами, уведомления от региональных служб</p>
+            </div>
+        </div>
+        <div class="module">
+            <div class="num">06</div>
+            <div class="content">
+                <h4>Персонализация</h4>
+                <p>Умные рекомендации кафе, активностей и событий под ваш бюджет</p>
+            </div>
+        </div>
+        <div class="module">
+            <div class="num">07</div>
+            <div class="content">
+                <h4>Цифровой паспорт</h4>
+                <p>Билеты, бронирования, достижения, бонусы от партнёров</p>
+            </div>
+        </div>
+        <div class="module">
+            <div class="num">08</div>
+            <div class="content">
+                <h4>Платформа впечатлений</h4>
+                <p>Мастер-классы, гастро-туры, экспедиции и квесты</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- СЛАЙД 6: СТРАТЕГИЧЕСКИЕ ЦИФРЫ -->
+<div class="slide">
+    <div class="glow bottom-left"></div>
+    <div class="slide-number">06 / 10</div>
+    <h2>Стратегическое значение <span class="highlight">для России</span></h2>
+    <div class="grid-4">
+        <div class="stat">
+            <div class="number">+35%</div>
+            <div class="label">рост туристического потока за 3 года</div>
+        </div>
+        <div class="stat">
+            <div class="number">85+</div>
+            <div class="label">регионов в единой экосистеме</div>
+        </div>
+        <div class="stat">
+            <div class="number">50K+</div>
+            <div class="label">новых рабочих мест к 2030 году</div>
+        </div>
+        <div class="stat">
+            <div class="number">+20%</div>
+            <div class="label">рост налоговых поступлений ежегодно</div>
+        </div>
+    </div>
+</div>
+
+<!-- СЛАЙД 7: ТЕХНОЛОГИИ -->
+<div class="slide">
+    <div class="glow top-right"></div>
+    <div class="slide-number">07 / 10</div>
+    <h2>Технологическая <span class="highlight">основа</span></h2>
+    <div class="grid-3">
+        <div class="card">
+            <div class="icon">⚡</div>
+            <h4>Масштабируемость</h4>
+            <p>Поддержка миллионов пользователей без потери производительности</p>
+        </div>
+        <div class="card">
+            <div class="icon">🔗</div>
+            <h4>Открытые API</h4>
+            <p>Интеграция с региональными сервисами, туроператорами, Госуслугами</p>
+        </div>
+        <div class="card">
+            <div class="icon">🛡️</div>
+            <h4>Безопасность</h4>
+            <p>Шифрование, 2FA, полное соответствие ФЗ-152</p>
+        </div>
+        <div class="card">
+            <div class="icon">📱</div>
+            <h4>Кроссплатформенность</h4>
+            <p>iOS, Android, веб-версия — единая кодовая база</p>
+        </div>
+        <div class="card">
+            <div class="icon">🔒</div>
+            <h4>Офлайн-режим</h4>
+            <p>Карты и маршруты работают без интернета</p>
+        </div>
+        <div class="card">
+            <div class="icon">🧠</div>
+            <h4>AI-ядро</h4>
+            <p>Собственные модели распознавания речи и NLP</p>
+        </div>
+    </div>
+</div>
+
+<!-- СЛАЙД 8: ЦЕННОСТЬ ДЛЯ БИЗНЕСА -->
+<div class="slide">
+    <div class="slide-number">08 / 10</div>
+    <h2>Ценность для <span class="highlight">бизнеса</span></h2>
+    <div class="grid-2">
+        <div class="card">
+            <div class="icon">🎯</div>
+            <h4>Прямой доступ к аудитории</h4>
+            <p>Туристы, заинтересованные в услугах конкретного региона, без посредников</p>
+        </div>
+        <div class="card">
+            <div class="icon">📊</div>
+            <h4>Аналитика в реальном времени</h4>
+            <p>Данные о загруженности локаций, спросе на активности, поведении туристов</p>
+        </div>
+        <div class="card">
+            <div class="icon">📣</div>
+            <h4>Инструменты продвижения</h4>
+            <p>Встроенные рекламные модули, партнёрские программы, система рекомендаций</p>
+        </div>
+        <div class="card">
+            <div class="icon">⚙️</div>
+            <h4>Оптимизация операций</h4>
+            <p>Автоматизация бронирования, чат-боты, интеграция с CRM</p>
+        </div>
+    </div>
+</div>
+
+<!-- СЛАЙД 9: ДОРОЖНАЯ КАРТА -->
+<div class="slide">
+    <div class="glow bottom-left"></div>
+    <div class="slide-number">09 / 10</div>
+    <h2>Дорожная <span class="highlight">карта</span></h2>
+    <div class="grid-4">
+        <div class="card">
+            <div class="icon">🚀</div>
+            <h4>Q1–Q2 2026</h4>
+            <p>MVP и пилот в 1–2 регионах (Карелия / Алтай)</p>
+        </div>
+        <div class="card">
+            <div class="icon">📈</div>
+            <h4>Q3–Q4 2026</h4>
+            <p>AR-модуль, интеграция с туроператорами, 10 регионов</p>
+        </div>
+        <div class="card">
+            <div class="icon">🌐</div>
+            <h4>2027</h4>
+            <p>50+ регионов, B2B-аналитика, интеграция с Госуслугами</p>
+        </div>
+        <div class="card">
+            <div class="icon">🤖</div>
+            <h4>2028</h4>
+            <p>85+ регионов, робототехника, международные пилоты</p>
+        </div>
+    </div>
+</div>
+
+<!-- СЛАЙД 10: ФИНАЛ -->
+<div class="slide final-slide">
+    <div class="glow top-right"></div>
+    <div class="glow bottom-left"></div>
+    <div class="slide-number">10 / 10</div>
+    <h1>Сквозь горизонт,<br>сквозь время</h1>
+    <p style="font-size: 1.3rem; color: var(--text-dim); max-width: 700px; margin-bottom: 60px;">
+        ARхипелаг — не просто приложение, а национальная инфраструктура, объединяющая путешественников, бизнес и регионы.
+    </p>
+    <div style="display: flex; gap: 40px; justify-content: center; flex-wrap: wrap;">
+        <div style="text-align: left;">
+            <div style="font-size: 0.8rem; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;">Сайт</div>
+            <div style="font-size: 1.1rem; color: var(--accent);">kovcheg-systems.ru</div>
+        </div>
+        <div style="text-align: left;">
+            <div style="font-size: 0.8rem; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;">Email</div>
+            <div style="font-size: 1.1rem; color: var(--accent);">hello@kovcheg-systems.ru</div>
+        </div>
+        <div style="text-align: left;">
+            <div style="font-size: 0.8rem; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;">Бренд</div>
+            <div style="font-size: 1.1rem; color: var(--accent);">Системы Ковчег</div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<!-- НАВИГАЦИЯ -->
+<div class="slide-counter">
+    <span class="current" id="currentSlide">01</span> / <span id="totalSlides">10</span>
+</div>
+<div class="nav-controls">
+    <button class="nav-btn" id="prevBtn">←</button>
+    <button class="nav-btn" id="nextBtn">→</button>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const currentEl = document.getElementById('currentSlide');
+const totalEl = document.getElementById('totalSlides');
+let current = 0;
+
+totalEl.textContent = String(slides.length).padStart(2, '0');
+
+function showSlide(n) {
+    slides.forEach(s => s.classList.remove('active'));
+    current = (n + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    currentEl.textContent = String(current + 1).padStart(2, '0');
+}
+
+document.getElementById('nextBtn').addEventListener('click', () => showSlide(current + 1));
+document.getElementById('prevBtn').addEventListener('click', () => showSlide(current - 1));
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') showSlide(current + 1);
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') showSlide(current - 1);
+    if (e.key === 'Home') showSlide(0);
+    if (e.key === 'End') showSlide(slides.length - 1);
+});
+
+// Свайпы для мобильных
+let touchStartX = 0;
+document.addEventListener('touchstart', e => touchStartX = e.touches[0].clientX);
+document.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+        if (diff > 0) showSlide(current + 1);
+        else showSlide(current - 1);
+    }
+});
+</script>
+
+</body>
+</html>
