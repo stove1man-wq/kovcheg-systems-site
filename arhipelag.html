@@ -5,13 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="ARхипелаг — национальная цифровая туристическая экосистема">
     <title>ARхипелаг | Системы Ковчег</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
+    <!-- FAVICON -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230A0A0A%22/><text x=%2250%22 y=%2265%22 font-family=%22Arial%22 font-size=%2250%22 font-weight=%22bold%22 fill=%22%236366F1%22 text-anchor=%22middle%22>К</text></svg>">
+
+    <!-- OPEN GRAPH -->
+    <meta property="og:title" content="ARхипелаг | Системы Ковчег">
+    <meta property="og:description" content="Национальная цифровая туристическая экосистема нового поколения.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kovcheg-systems.ru/arhipelag.html">
+    <meta property="og:site_name" content="Системы Ковчег">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --bg-primary: #0A0A0A;
             --bg-secondary: #121212;
@@ -21,7 +27,6 @@
             --accent-glow: rgba(99, 102, 241, 0.3);
             --border: #2A2A2A;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: var(--bg-primary);
@@ -30,307 +35,93 @@
             overflow-x: hidden;
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in {
-            animation: fadeInUp 1s ease-out forwards;
+        /* АНИМАЦИЯ ПРОЯВЛЕНИЯ ИЗ ТУМАНА */
+        .reveal {
             opacity: 0;
+            filter: blur(10px);
+            transform: translateY(40px);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
-        .fade-in-delay-1 { animation-delay: 0.2s; }
-        .fade-in-delay-2 { animation-delay: 0.4s; }
+        .reveal.active {
+            opacity: 1;
+            filter: blur(0px);
+            transform: translateY(0);
+        }
 
         nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(10px);
+            position: fixed; top: 0; width: 100%;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
-            z-index: 1000;
-            padding: 1rem 0;
+            z-index: 1000; padding: 1rem 0;
         }
-
         .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center;
         }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: var(--text-primary);
-        }
-
-        .logo span {
-            color: var(--accent);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.3s;
-            font-size: 0.95rem;
-        }
-
-        .nav-links a:hover {
-            color: var(--accent);
-        }
+        .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: 1px; color: var(--text-primary); }
+        .logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s; font-size: 0.95rem; }
+        .nav-links a:hover { color: var(--accent); }
 
         .hero {
-            min-height: 60vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 6rem 2rem 4rem;
-            position: relative;
+            min-height: 60vh; display: flex; align-items: center; justify-content: center;
+            text-align: center; padding: 6rem 2rem 4rem; position: relative;
         }
-
         .hero::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 500px;
-            height: 500px;
+            content: ''; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); width: 500px; height: 500px;
             background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-            opacity: 0.3;
+            opacity: 0.3; animation: pulse 4s ease-in-out infinite;
         }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 800px;
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.5; }
         }
-
+        .hero-content { position: relative; z-index: 1; max-width: 800px; }
         .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4rem);
-            font-weight: 800;
-            margin-bottom: 1rem;
+            font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; margin-bottom: 1rem;
             background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
+        .hero .tagline { font-size: 1.3rem; color: var(--text-secondary); margin-bottom: 2rem; }
+        .hero .description { font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto; }
 
-        .hero .tagline {
-            font-size: 1.3rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-        }
+        section { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .section-title { font-size: 2rem; font-weight: 700; margin-bottom: 2rem; text-align: center; }
 
-        .hero .description {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
+        .vision-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem; }
+        .vision-card {
+            background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; transition: all 0.3s;
         }
+        .vision-card:hover { border-color: var(--accent); transform: translateY(-5px); }
+        .vision-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+        .vision-card h3 { color: var(--accent); margin-bottom: 1rem; font-size: 1.3rem; }
+        .vision-card p { color: var(--text-secondary); }
 
-        section {
-            padding: 4rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin: 3rem 0; text-align: center; }
+        .stat-item { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; }
+        .stat-number { font-size: 2.5rem; font-weight: 800; color: var(--accent); margin-bottom: 0.5rem; }
+        .stat-label { color: var(--text-secondary); font-size: 0.9rem; }
 
-        .section-title {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            text-align: center;
+        .locked-content {
+            background: var(--bg-secondary); border: 2px dashed var(--border); border-radius: 12px; padding: 3rem; text-align: center; margin: 3rem 0;
         }
-
-        .modules-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .module-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 2rem;
-            transition: all 0.3s;
-        }
-
-        .module-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-5px);
-        }
-
-        .module-number {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--accent);
-            margin-bottom: 1rem;
-        }
-
-        .module-card h3 {
-            color: var(--text-primary);
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-
-        .module-card p {
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-        }
-
-        .module-features {
-            list-style: none;
-            padding: 0;
-        }
-
-        .module-features li {
-            color: var(--text-secondary);
-            padding: 0.3rem 0;
-            font-size: 0.9rem;
-        }
-
-        .module-features li::before {
-            content: '✓ ';
-            color: var(--accent);
-            font-weight: bold;
-        }
-
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .benefit-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 2rem;
-        }
-
-        .benefit-card h3 {
-            color: var(--accent);
-            margin-bottom: 1rem;
-        }
-
-        .benefit-card ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .benefit-card li {
-            color: var(--text-secondary);
-            padding: 0.5rem 0;
-        }
-
-        .benefit-card li::before {
-            content: '• ';
-            color: var(--accent);
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin: 3rem 0;
-            text-align: center;
-        }
-
-        .stat-item {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 2rem;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--accent);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .cta-section {
-            text-align: center;
-            padding: 4rem 2rem;
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            margin: 3rem 0;
-        }
+        .locked-content h3 { color: var(--text-primary); margin-bottom: 1rem; font-size: 1.5rem; }
+        .locked-content p { color: var(--text-secondary); margin-bottom: 2rem; }
 
         .btn {
-            display: inline-block;
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            margin: 0.5rem;
+            display: inline-block; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s; margin: 0.5rem;
         }
+        .btn-primary { background: var(--accent); color: white; border: 2px solid var(--accent); }
+        .btn-primary:hover { background: transparent; color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
+        .btn-secondary { background: transparent; color: var(--text-primary); border: 2px solid var(--border); }
+        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
 
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-            border: 2px solid var(--accent);
-        }
+        footer { text-align: center; padding: 2rem; border-top: 1px solid var(--border); color: var(--text-secondary); font-size: 0.9rem; }
 
-        .btn-primary:hover {
-            background: transparent;
-            color: var(--accent);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--text-primary);
-            border: 2px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        footer {
-            text-align: center;
-            padding: 2rem;
-            border-top: 1px solid var(--border);
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-        }
+        @media (max-width: 768px) { .nav-links { display: none; } }
     </style>
 </head>
 <body>
@@ -346,148 +137,53 @@
     </nav>
 
     <section class="hero">
-        <div class="hero-content">
-            <h1 class="fade-in">🗺️ ARхипелаг</h1>
-            <p class="tagline fade-in fade-in-delay-1">Национальная цифровая туристическая экосистема</p>
-            <p class="description fade-in fade-in-delay-2">
+        <div class="hero-content reveal">
+            <h1>🗺️ ARхипелаг</h1>
+            <p class="tagline">Национальная цифровая туристическая экосистема</p>
+            <p class="description">
                 Единая цифровая инфраструктура для путешествий по России — от Калининграда до Камчатки. 
-                8 модулей в одном приложении.
+                Проект находится в стадии активной разработки.
             </p>
         </div>
     </section>
 
-    <section>
-        <h2 class="section-title">8 ключевых модулей</h2>
-        <div class="modules-grid">
-            <div class="module-card">
-                <div class="module-number">01</div>
-                <h3>AI-помощник</h3>
-                <p>Персональный гид, который строит маршруты и отвечает на вопросы 24/7</p>
-                <ul class="module-features">
-                    <li>Маршруты с учётом интересов и погоды</li>
-                    <li>Корректировка планов в реальном времени</li>
-                    <li>Ответы о достопримечательностях и транспорте</li>
-                </ul>
+    <section class="reveal">
+        <h2 class="section-title">Видение проекта</h2>
+        <div class="vision-grid">
+            <div class="vision-card">
+                <div class="vision-icon">🎯</div>
+                <h3>Единая экосистема</h3>
+                <p>Вместо десятков разрозненных приложений — одна платформа, объединяющая все аспекты путешествия: от планирования до возвращения домой.</p>
             </div>
-
-            <div class="module-card">
-                <div class="module-number">02</div>
-                <h3>Travel-соцсеть</h3>
-                <p>Пространство для общения путешественников</p>
-                <ul class="module-features">
-                    <li>Публикации с геотегами</li>
-                    <li>Отзывы о локациях</li>
-                    <li>Поиск попутчиков</li>
-                </ul>
+            <div class="vision-card">
+                <div class="vision-icon">🤖</div>
+                <h3>AI-персонализация</h3>
+                <p>Интеллектуальный помощник, который изучает ваши предпочтения и создает уникальные маршруты, адаптируясь к погоде, настроению и бюджету.</p>
             </div>
-
-            <div class="module-card">
-                <div class="module-number">03</div>
-                <h3>Карты и маршруты</h3>
-                <p>Навигация с расширенным функционалом</p>
-                <ul class="module-features">
-                    <li>Офлайн-доступ</li>
-                    <li>Динамическая навигация</li>
-                    <li>Учёт пробок и загруженности</li>
-                </ul>
+            <div class="vision-card">
+                <div class="vision-icon">🎭</div>
+                <h3>Дополненная реальность</h3>
+                <p>История оживает прямо на вашем экране. AR-путеводители показывают, как выглядели места сотни лет назад, и рассказывают их истории.</p>
             </div>
-
-            <div class="module-card">
-                <div class="module-number">04</div>
-                <h3>AR-путеводитель</h3>
-                <p>Интерактивное взаимодействие с пространством</p>
-                <ul class="module-features">
-                    <li>Визуализация исторических событий</li>
-                    <li>3D-модели утраченных объектов</li>
-                    <li>Подсказки о nearby сервисах</li>
-                </ul>
+            <div class="vision-card">
+                <div class="vision-icon">🛡️</div>
+                <h3>Безопасность 24/7</h3>
+                <p>Мгновенные оповещения о рисках, экстренный вызов служб, верифицированные гиды и сервисы. Путешествуйте спокойно.</p>
             </div>
-
-            <div class="module-card">
-                <div class="module-number">05</div>
-                <h3>Система общения</h3>
-                <p>Единая среда для связи</p>
-                <ul class="module-features">
-                    <li>Чаты с гидами и туроператорами</li>
-                    <li>Групповые обсуждения</li>
-                    <li>Уведомления от служб</li>
-                </ul>
+            <div class="vision-card">
+                <div class="vision-icon">👥</div>
+                <h3>Социальная платформа</h3>
+                <p>Находите попутчиков, делитесь впечатлениями, получайте рекомендации от реальных путешественников, а не от алгоритмов.</p>
             </div>
-
-            <div class="module-card">
-                <div class="module-number">06</div>
-                <h3>Smart-рекомендации</h3>
-                <p>Умные подсказки на основе AI</p>
-                <ul class="module-features">
-                    <li>Подборки кафе по бюджету</li>
-                    <li>Активности для разных компаний</li>
-                    <li>События в регионе</li>
-                </ul>
-            </div>
-
-            <div class="module-card">
-                <div class="module-number">07</div>
-                <h3>Цифровой паспорт</h3>
-                <p>Личный кабинет путешественника</p>
-                <ul class="module-features">
-                    <li>Билеты и бронирования</li>
-                    <li>Достижения и награды</li>
-                    <li>Бонусы от партнёров</li>
-                </ul>
-            </div>
-
-            <div class="module-card">
-                <div class="module-number">08</div>
-                <h3>Платформа впечатлений</h3>
-                <p>Бронирование уникальных активностей</p>
-                <ul class="module-features">
-                    <li>Мастер-классы ремесленников</li>
-                    <li>Гастрономические туры</li>
-                    <li>Экспедиции и квесты</li>
-                </ul>
+            <div class="vision-card">
+                <div class="vision-icon">📊</div>
+                <h3>Аналитика для регионов</h3>
+                <p>Регионы получают данные о туристических потоках в реальном времени, что позволяет оптимизировать инфраструктуру и развивать малоизвестные локации.</p>
             </div>
         </div>
     </section>
 
-    <section>
-        <h2 class="section-title">Польза для всех участников</h2>
-        <div class="benefits-grid">
-            <div class="benefit-card">
-                <h3>👤 Для пользователей</h3>
-                <ul>
-                    <li>Единый интерфейс вместо 10+ приложений</li>
-                    <li>Персонализация на базе AI</li>
-                    <li>Геймификация и AR</li>
-                    <li>Безопасность 24/7</li>
-                    <li>Живое общение с попутчиками</li>
-                </ul>
-            </div>
-
-            <div class="benefit-card">
-                <h3>🏢 Для бизнеса</h3>
-                <ul>
-                    <li>Доступ к целевой аудитории</li>
-                    <li>Аналитика в реальном времени</li>
-                    <li>Встроенные рекламные модули</li>
-                    <li>Автоматизация бронирования</li>
-                    <li>Интеграция с CRM</li>
-                </ul>
-            </div>
-
-            <div class="benefit-card">
-                <h3>🏛️ Для регионов</h3>
-                <ul>
-                    <li>Развитие малоизвестных локаций</li>
-                    <li>Рост доходов от туризма</li>
-                    <li>Создание рабочих мест</li>
-                    <li>Укрепление имиджа региона</li>
-                    <li>Данные для стратегического планирования</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <section>
+    <section class="reveal">
         <h2 class="section-title">Стратегическое значение</h2>
         <div class="stats">
             <div class="stat-item">
@@ -509,14 +205,17 @@
         </div>
     </section>
 
-    <section>
-        <div class="cta-section">
-            <h2 class="section-title">Партнёрство и инвестиции</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 2rem;">
-                ARхипелаг открыт для стратегического партнёрства с регионами, туроператорами и инвесторами. 
-                Запросите полную презентацию проекта.
+    <section class="reveal">
+        <div class="locked-content">
+            <h3>🔒 Полная презентация доступна по запросу</h3>
+            <p>
+                Детальная информация о проекте, включая техническую архитектуру, бизнес-модель, 
+                дорожную карту и финансовые прогнозы, предоставляется серьезным партнерам и инвесторам 
+                после подписания NDA.
             </p>
-            <a href="mailto:hello@kovcheg-systems.ru" class="btn btn-primary">Связаться с нами</a>
+            <a href="mailto:hello@kovcheg-systems.ru?subject=Запрос презентации ARхипелаг" class="btn btn-primary">
+                Запросить доступ
+            </a>
             <a href="index.html" class="btn btn-secondary">На главную</a>
         </div>
     </section>
@@ -525,5 +224,18 @@
         <p>© 2024–2026 Системы Ковчег (Kovcheg Systems). Все права защищены.</p>
         <p style="margin-top: 0.5rem; font-style: italic;">Сквозь горизонт, сквозь время!</p>
     </footer>
+
+    <script>
+        // Анимация появления из тумана
+        const observerOptions = { threshold: 0.15, rootMargin: '0px 0px -50px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
 </body>
 </html>
