@@ -18,9 +18,8 @@
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         :root {
-            --bg-primary: #050505;
+            --bg-primary: #0A0A0A;
             --bg-secondary: #121212;
             --text-primary: #EAEAEA;
             --text-secondary: #888888;
@@ -28,7 +27,6 @@
             --accent-glow: rgba(99, 102, 241, 0.3);
             --border: #2A2A2A;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: var(--bg-primary);
@@ -45,34 +43,24 @@
             z-index: -1;
             background: radial-gradient(circle at 50% 50%, #0a0a12 0%, #050505 100%);
         }
-        
-        /* Тонкая сетка для глубины */
-        .grid-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-            background-size: 60px 60px;
-            z-index: -1;
-            pointer-events: none;
-        }
 
-        /* АНИМАЦИЯ ПРОЯВЛЕНИЯ */
+        /* АНИМАЦИЯ ПРОЯВЛЕНИЯ ИЗ ТУМАНА */
         .reveal {
             opacity: 0;
             filter: blur(10px);
             transform: translateY(40px);
             transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .reveal.active { opacity: 1; filter: blur(0px); transform: translateY(0); }
+        .reveal.active {
+            opacity: 1;
+            filter: blur(0px);
+            transform: translateY(0);
+        }
 
-        /* НАВИГАЦИЯ */
         nav {
             position: fixed; top: 0; width: 100%;
-            background: rgba(5, 5, 5, 0.85);
+            background: rgba(10, 10, 10, 0.85);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
             z-index: 1000; padding: 1rem 0;
         }
@@ -86,13 +74,10 @@
         .nav-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s; font-size: 0.95rem; }
         .nav-links a:hover { color: var(--accent); }
 
-        /* СЕКЦИИ */
-        section { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; position: relative; }
-        .section-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; text-align: center; }
-        .section-subtitle { font-size: 1.2rem; color: var(--text-secondary); text-align: center; margin-bottom: 4rem; max-width: 600px; margin-left: auto; margin-right: auto; }
-
-        /* HERO */
-        .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 2rem; }
+        .hero {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            text-align: center; padding: 2rem; position: relative; overflow: hidden;
+        }
         .hero-content { position: relative; z-index: 1; max-width: 800px; }
         .hero h1 {
             font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800; letter-spacing: 2px; margin-bottom: 1rem;
@@ -102,18 +87,19 @@
         .hero .tagline { font-size: clamp(1.2rem, 3vw, 1.8rem); color: var(--text-secondary); font-style: italic; margin-bottom: 2rem; }
         .hero .description { font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 3rem; }
 
-        /* КНОПКИ */
         .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
         .btn {
-            padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s; 
-            display: inline-block; border: none; cursor: pointer; font-size: 1rem;
+            padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s; display: inline-block; border: none; cursor: pointer; font-size: 1rem;
         }
         .btn-primary { background: var(--accent); color: white; border: 2px solid var(--accent); }
         .btn-primary:hover { background: transparent; color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
         .btn-secondary { background: transparent; color: var(--text-primary); border: 2px solid var(--border); }
         .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
 
-        /* КАРТОЧКИ ПРОЕКТОВ */
+        section { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .section-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; text-align: center; }
+        .section-subtitle { font-size: 1.2rem; color: var(--text-secondary); text-align: center; margin-bottom: 4rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+
         .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
         .project-card {
             background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; transition: all 0.3s;
@@ -126,13 +112,11 @@
         .project-features li { padding: 0.5rem 0; color: var(--text-secondary); font-size: 0.95rem; }
         .project-features li::before { content: '✓ '; color: var(--accent); font-weight: bold; }
 
-        /* ТЕХНОЛОГИИ */
         .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 3rem; }
         .tech-item { text-align: center; padding: 2rem; background: var(--bg-secondary); border-radius: 12px; border: 1px solid var(--border); }
         .tech-item h4 { color: var(--accent); margin: 1rem 0; font-size: 1.2rem; }
         .tech-item p { color: var(--text-secondary); font-size: 0.95rem; }
 
-        /* ФОРМА */
         .contact-form-container {
             background: var(--bg-secondary); border-radius: 12px; padding: 4rem 2rem; border: 1px solid var(--border); max-width: 600px; margin: 0 auto;
         }
@@ -141,7 +125,7 @@
         .form-group input, .form-group textarea {
             width: 100%; padding: 1rem; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 1rem; transition: border-color 0.3s;
         }
-        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); }
         .form-group textarea { resize: vertical; min-height: 120px; }
 
         footer { text-align: center; padding: 2rem; border-top: 1px solid var(--border); color: var(--text-secondary); font-size: 0.9rem; }
@@ -152,7 +136,6 @@
 <body>
     <!-- ФОНОВЫЙ ПОРТАЛ -->
     <canvas id="portal-canvas"></canvas>
-    <div class="grid-overlay"></div>
 
     <nav>
         <div class="nav-container">
@@ -327,13 +310,11 @@
                         let force = (mouse.radius - distance) / mouse.radius;
                         let directionX = dx / distance;
                         let directionY = dy / distance;
-                        // Частицы разлетаются от курсора
                         this.x -= directionX * force * this.density * 0.8;
                         this.y -= directionY * force * this.density * 0.8;
                     }
                 }
 
-                // Зацикливание при выходе за края
                 if (this.x < 0) this.x = canvas.width;
                 if (this.x > canvas.width) this.x = 0;
                 if (this.y < 0) this.y = canvas.height;
@@ -350,7 +331,6 @@
 
         function initParticles() {
             particles = [];
-            // Количество частиц зависит от размера экрана (не перегружает слабые устройства)
             let numberOfParticles = Math.min((canvas.width * canvas.height) / 10000, 200);
             for (let i = 0; i < numberOfParticles; i++) {
                 particles.push(new Particle());
@@ -358,7 +338,6 @@
         }
         initParticles();
 
-        // Соединяем близкие частицы линиями (нейронная сеть)
         function connectParticles() {
             for (let a = 0; a < particles.length; a++) {
                 for (let b = a; b < particles.length; b++) {
@@ -387,7 +366,6 @@
         }
         animateParticles();
 
-        // Пересоздаём частицы при изменении размера окна
         window.addEventListener('resize', () => {
             resizeCanvas();
             initParticles();
