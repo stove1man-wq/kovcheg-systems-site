@@ -5,13 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Barabashka — персональный голосовой AI-агент с офлайн-распознаванием речи">
     <title>Barabashka | Системы Ковчег</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
+    <!-- FAVICON -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230A0A0A%22/><text x=%2250%22 y=%2265%22 font-family=%22Arial%22 font-size=%2250%22 font-weight=%22bold%22 fill=%22%236366F1%22 text-anchor=%22middle%22>К</text></svg>">
+
+    <!-- OPEN GRAPH -->
+    <meta property="og:title" content="Barabashka | Системы Ковчег">
+    <meta property="og:description" content="Персональный голосовой AI-агент, работающий полностью офлайн.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kovcheg-systems.ru/barabashka.html">
+    <meta property="og:site_name" content="Системы Ковчег">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --bg-primary: #0A0A0A;
             --bg-secondary: #121212;
@@ -21,7 +27,6 @@
             --accent-glow: rgba(99, 102, 241, 0.3);
             --border: #2A2A2A;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: var(--bg-primary);
@@ -30,274 +35,88 @@
             overflow-x: hidden;
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in {
-            animation: fadeInUp 1s ease-out forwards;
+        /* АНИМАЦИЯ ПРОЯВЛЕНИЯ ИЗ ТУМАНА */
+        .reveal {
             opacity: 0;
+            filter: blur(10px);
+            transform: translateY(40px);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
-        .fade-in-delay-1 { animation-delay: 0.2s; }
-        .fade-in-delay-2 { animation-delay: 0.4s; }
+        .reveal.active {
+            opacity: 1;
+            filter: blur(0px);
+            transform: translateY(0);
+        }
 
         nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(10px);
+            position: fixed; top: 0; width: 100%;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
-            z-index: 1000;
-            padding: 1rem 0;
+            z-index: 1000; padding: 1rem 0;
         }
-
         .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center;
         }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: var(--text-primary);
-        }
-
-        .logo span {
-            color: var(--accent);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.3s;
-            font-size: 0.95rem;
-        }
-
-        .nav-links a:hover {
-            color: var(--accent);
-        }
+        .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: 1px; color: var(--text-primary); }
+        .logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s; font-size: 0.95rem; }
+        .nav-links a:hover { color: var(--accent); }
 
         .hero {
-            min-height: 60vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 6rem 2rem 4rem;
-            position: relative;
+            min-height: 60vh; display: flex; align-items: center; justify-content: center;
+            text-align: center; padding: 6rem 2rem 4rem; position: relative;
         }
-
         .hero::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 500px;
-            height: 500px;
+            content: ''; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); width: 500px; height: 500px;
             background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-            opacity: 0.3;
+            opacity: 0.3; animation: pulse 4s ease-in-out infinite;
         }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 800px;
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.5; }
         }
-
+        .hero-content { position: relative; z-index: 1; max-width: 800px; }
         .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4rem);
-            font-weight: 800;
-            margin-bottom: 1rem;
+            font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; margin-bottom: 1rem;
             background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
+        .hero .tagline { font-size: 1.3rem; color: var(--text-secondary); margin-bottom: 2rem; }
+        .hero .description { font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto; }
 
-        .hero .tagline {
-            font-size: 1.3rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-        }
+        section { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .section-title { font-size: 2rem; font-weight: 700; margin-bottom: 2rem; text-align: center; }
 
-        .hero .description {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        section {
-            padding: 4rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem; }
         .feature-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 2rem;
-            transition: all 0.3s;
+            background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; transition: all 0.3s;
         }
+        .feature-card:hover { border-color: var(--accent); transform: translateY(-5px); }
+        .feature-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+        .feature-card h3 { color: var(--accent); margin-bottom: 1rem; font-size: 1.3rem; }
+        .feature-card p { color: var(--text-secondary); }
 
-        .feature-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-5px);
+        .locked-content {
+            background: var(--bg-secondary); border: 2px dashed var(--border); border-radius: 12px; padding: 3rem; text-align: center; margin: 3rem 0;
         }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-card h3 {
-            color: var(--accent);
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-
-        .feature-card p {
-            color: var(--text-secondary);
-        }
-
-        .architecture {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 3rem;
-            margin: 3rem 0;
-        }
-
-        .architecture h3 {
-            color: var(--accent);
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-        }
-
-        .architecture pre {
-            background: var(--bg-primary);
-            padding: 1.5rem;
-            border-radius: 8px;
-            overflow-x: auto;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .tech-stack {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .tech-item {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .tech-item h4 {
-            color: var(--accent);
-            margin-bottom: 0.5rem;
-        }
-
-        .tech-item p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .cta-section {
-            text-align: center;
-            padding: 4rem 2rem;
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            margin: 3rem 0;
-        }
+        .locked-content h3 { color: var(--text-primary); margin-bottom: 1rem; font-size: 1.5rem; }
+        .locked-content p { color: var(--text-secondary); margin-bottom: 2rem; }
 
         .btn {
-            display: inline-block;
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            margin: 0.5rem;
+            display: inline-block; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s; margin: 0.5rem;
         }
+        .btn-primary { background: var(--accent); color: white; border: 2px solid var(--accent); }
+        .btn-primary:hover { background: transparent; color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
+        .btn-secondary { background: transparent; color: var(--text-primary); border: 2px solid var(--border); }
+        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
 
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-            border: 2px solid var(--accent);
-        }
+        footer { text-align: center; padding: 2rem; border-top: 1px solid var(--border); color: var(--text-secondary); font-size: 0.9rem; }
 
-        .btn-primary:hover {
-            background: transparent;
-            color: var(--accent);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--text-primary);
-            border: 2px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        footer {
-            text-align: center;
-            padding: 2rem;
-            border-top: 1px solid var(--border);
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-        }
+        @media (max-width: 768px) { .nav-links { display: none; } }
     </style>
 </head>
 <body>
@@ -313,142 +132,63 @@
     </nav>
 
     <section class="hero">
-        <div class="hero-content">
-            <h1 class="fade-in">🦊 Barabashka</h1>
-            <p class="tagline fade-in fade-in-delay-1">Персональный голосовой AI-агент</p>
-            <p class="description fade-in fade-in-delay-2">
-                Голосовой помощник, который работает без интернета, без облака и без задержек. 
-                Понимает русскую речь мгновенно и выполняет реальные действия.
+        <div class="hero-content reveal">
+            <h1>🦊 Barabashka</h1>
+            <p class="tagline">Персональный голосовой AI-агент</p>
+            <p class="description">
+                Голосовой помощник нового поколения, который понимает вас мгновенно и работает полностью офлайн. 
+                Проект доступен для тестирования.
             </p>
         </div>
     </section>
 
-    <section>
+    <section class="reveal">
         <h2 class="section-title">Ключевые особенности</h2>
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon">🔒</div>
                 <h3>100% Офлайн</h3>
-                <p>Распознавание речи работает полностью на устройстве. Ваши данные никогда не покидают телефон.</p>
+                <p>Распознавание речи работает полностью на устройстве. Ваши данные никогда не покидают телефон. Никакого облака, никаких задержек.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">⚡</div>
                 <h3>Мгновенный отклик</h3>
-                <p>Никаких задержек на отправку в облако. Команды выполняются за миллисекунды.</p>
+                <p>Команды выполняются за миллисекунды. Говорите — и действие происходит сразу, без ожидания ответа от сервера.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">🧠</div>
                 <h3>Двухуровневый интеллект</h3>
-                <p>Быстрые правила для простых команд + умная LLM для сложных задач.</p>
+                <p>Быстрые правила для повседневных задач + умная языковая модель для сложных вопросов. Лучшее из обоих миров.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">🎭</div>
-                <h3>3D-аватар с характером</h3>
-                <p>Не просто интерфейс, а живой спутник с анимациями и эмоциями.</p>
+                <h3>Живой аватар</h3>
+                <p>Не просто интерфейс, а персонаж с характером. 3D-аватар, который появляется из темноты и реагирует на ваш голос.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">🚕</div>
-                <h3>Интеграция с сервисами</h3>
-                <p>Яндекс Go, Ситимобил, Максим, inDrive, Telegram, WhatsApp — всё голосом.</p>
+                <h3>Глубокая интеграция</h3>
+                <p>Вызов такси, отправка сообщений, управление устройством — всё голосом. Поддержка популярных сервисов России.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">📱</div>
                 <h3>Кроссплатформенность</h3>
-                <p>Работает на Android и Windows из единой кодовой базы на Unity 6.</p>
+                <p>Работает на Android и Windows. Единая кодовая база, нативная производительность.</p>
             </div>
         </div>
     </section>
 
-    <section>
-        <h2 class="section-title">Что умеет</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <h3>📋 Задачи и организация</h3>
-                <p>Заметки, напоминания, таймеры, будильник, калькулятор</p>
-            </div>
-            <div class="feature-card">
-                <h3>🌍 Информация и навигация</h3>
-                <p>Погода, поиск в интернете, карты, маршруты</p>
-            </div>
-            <div class="feature-card">
-                <h3>📞 Коммуникация</h3>
-                <p>Звонки, SMS, сообщения в Telegram и WhatsApp</p>
-            </div>
-            <div class="feature-card">
-                <h3>🚕 Транспорт</h3>
-                <p>Вызов такси голосом с автоматическим построением маршрута</p>
-            </div>
-            <div class="feature-card">
-                <h3>📱 Управление устройством</h3>
-                <p>Фонарик, громкость, заряд батареи, открытие приложений</p>
-            </div>
-        </div>
-    </section>
-
-    <section>
-        <div class="architecture">
-            <h3>Архитектура системы</h3>
-            <pre>
-┌─────────────────────────────────────────────────────────┐
-│                  Голосовой ввод (микрофон)              │
-└──────────────────────┬──────────────────────────────────┘
-                       ▼
-        ┌──────────────────────────────┐
-        │  Sherpa-ONNX + GigaAM        │  ← Офлайн-распознавание
-        │  (локальное STT)             │     русской речи
-        └──────────────┬───────────────┘
-                       ▼
-        ┌──────────────────────────────┐
-        │  Слой правил (Rules Engine)  │  ← Мгновенно, офлайн
-        │  «Поставь будильник на 7»    │
-        └──────────────┬───────────────┘
-                       │
-          ┌────────────┴────────────┐
-          │ Правило найдено?        │
-          └────────────┬────────────┘
-           Да ▼            ▼ Нет
-    ┌──────────────┐  ┌──────────────────────┐
-    │ Выполняем    │  │  LLM-слой (опционально)│
-    │ локально     │  │  Ollama / OpenRouter / │
-    └──────────────┘  │  локальная модель      │
-                      └──────────┬─────────────┘
-                                 ▼
-                      ┌──────────────────────┐
-                      │  Ответ / Действие    │
-                      └──────────────────────┘
-            </pre>
-        </div>
-    </section>
-
-    <section>
-        <h2 class="section-title">Технологический стек</h2>
-        <div class="tech-stack">
-            <div class="tech-item">
-                <h4>Unity 6</h4>
-                <p>Кроссплатформенная разработка</p>
-            </div>
-            <div class="tech-item">
-                <h4>C# 98%</h4>
-                <p>Основной язык разработки</p>
-            </div>
-            <div class="tech-item">
-                <h4>Sherpa-ONNX</h4>
-                <p>Офлайн-распознавание речи</p>
-            </div>
-            <div class="tech-item">
-                <h4>GigaAM</h4>
-                <p>Модель для русского языка</p>
-            </div>
-        </div>
-    </section>
-
-    <section>
-        <div class="cta-section">
-            <h2 class="section-title">Попробуйте Barabashka</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 2rem;">
-                Исходный код доступен на GitHub. Присоединяйтесь к разработке!
+    <section class="reveal">
+        <div class="locked-content">
+            <h3>🔒 Техническая документация и исходный код</h3>
+            <p>
+                Barabashka — это первый проект экосистемы «Системы Ковчег». 
+                Часть исходного кода доступна на GitHub для разработчиков. 
+                Полная техническая документация и архитектура предоставляются партнерам по запросу.
             </p>
-            <a href="https://github.com/stove1man-wq/Barabashka" class="btn btn-primary" target="_blank">GitHub репозиторий</a>
+            <a href="https://github.com/stove1man-wq/Barabashka" class="btn btn-primary" target="_blank">
+                GitHub репозиторий
+            </a>
             <a href="index.html" class="btn btn-secondary">На главную</a>
         </div>
     </section>
@@ -457,5 +197,18 @@
         <p>© 2024–2026 Системы Ковчег (Kovcheg Systems). Все права защищены.</p>
         <p style="margin-top: 0.5rem; font-style: italic;">Сквозь горизонт, сквозь время!</p>
     </footer>
+
+    <script>
+        // Анимация появления из тумана
+        const observerOptions = { threshold: 0.15, rootMargin: '0px 0px -50px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
 </body>
 </html>
