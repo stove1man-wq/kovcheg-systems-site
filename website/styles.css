@@ -84,7 +84,7 @@ h2 em { color: var(--copper); font-family: var(--serif); font-weight: 400; }
 }
 .hero-backdrop {
   position: absolute; inset: 0;
-  background-image: linear-gradient(90deg, rgba(12,16,13,.94) 0%, rgba(12,16,13,.72) 44%, rgba(12,16,13,.3) 100%), linear-gradient(0deg, rgba(16,19,17,.68), transparent 50%), url("../assets/images/backgrounds/ComfyUI_00174_.png");
+  background-image: linear-gradient(90deg, rgba(12,16,13,.94) 0%, rgba(12,16,13,.72) 44%, rgba(12,16,13,.3) 100%), linear-gradient(0deg, rgba(16,19,17,.68), transparent 50%), url("../assets/images/backgrounds/ComfyUI_00177_.png");
   background-size: cover; background-position: center;
   opacity: .72;
 }
@@ -142,17 +142,30 @@ h2 em { color: var(--copper); font-family: var(--serif); font-weight: 400; }
 .direction-eco { background: linear-gradient(150deg, #25231d, #171a16 74%); }
 .direction-robotics { background: linear-gradient(150deg, #29232a, #171a17 74%); }
 .card-index { position: absolute; z-index: 2; top: 25px; left: 26px; color: rgba(238,233,221,.45); }
-.organic-art { position: absolute; top: 70px; left: 50%; width: 260px; height: 230px; transform: translateX(-50%); }
-.organic-art span, .organic-art i, .organic-art b { position: absolute; display: block; border-radius: 48% 52% 62% 38% / 42% 40% 60% 58%; }
-.art-ai span { width: 145px; height: 185px; left: 58px; top: 22px; background: radial-gradient(ellipse at 35% 28%, #d0e1c8, #6e9b7c 40%, #244d38 73%, transparent 74%); filter: drop-shadow(0 0 32px rgba(120,183,139,.25)); transform: rotate(30deg); }
-.art-ai i { width: 110px; height: 140px; border: 1px solid rgba(207,225,200,.5); left: 80px; top: 40px; transform: rotate(-34deg); }
-.art-ai b { width: 75px; height: 75px; background: radial-gradient(circle at 35% 30%, #f0e8d3, #bc9168 42%, #694d3b 70%); left: 94px; top: 74px; opacity: .85; }
-.art-eco span { width: 180px; height: 180px; left: 42px; top: 28px; background: radial-gradient(circle at 36% 30%, #e4d6b7, #b38b5f 40%, #5e573e 68%, transparent 70%); transform: rotate(48deg); }
-.art-eco i { width: 210px; height: 104px; left: 24px; top: 65px; border: 1px solid rgba(231,210,170,.55); transform: rotate(-34deg); }
-.art-eco b { width: 135px; height: 135px; left: 60px; top: 50px; border: 1px solid rgba(231,210,170,.28); transform: rotate(42deg); }
-.art-robotics span { width: 150px; height: 180px; left: 55px; top: 23px; background: radial-gradient(ellipse at 35% 30%, #d2b9d0, #967e96 43%, #4c3d50 72%, transparent 74%); transform: rotate(-28deg); }
-.art-robotics i { width: 175px; height: 95px; left: 40px; top: 68px; border: 1px solid rgba(210,185,208,.55); transform: rotate(35deg); }
-.art-robotics b { width: 64px; height: 64px; left: 97px; top: 80px; background: radial-gradient(circle at 35% 30%, #eee6d8, #a8899f 58%, #59465c); }
+.organic-art {
+  position: absolute; top: 70px; left: 50%; width: 260px; height: 230px;
+  transform: translateX(-50%); overflow: hidden;
+  border-radius: 48% 52% 42% 58% / 43% 45% 55% 57%;
+  background-color: #202a23;
+  box-shadow: inset 0 0 0 1px rgba(238,233,221,.12), 0 18px 50px rgba(0,0,0,.22);
+}
+.organic-art::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(16,19,17,.04) 10%, rgba(16,19,17,.48) 100%);
+}
+.organic-art span, .organic-art i, .organic-art b { display: none; }
+.art-ai {
+  background-image: linear-gradient(180deg, rgba(16,19,17,.06), rgba(16,19,17,.58)), url("../assets/images/digital-ecosystems/ComfyUI_00098_.png");
+  background-size: cover; background-position: center;
+}
+.art-eco {
+  background-image: linear-gradient(180deg, rgba(16,19,17,.02), rgba(16,19,17,.52)), url("../assets/images/digital-ecosystems/ComfyUI_00124_.png");
+  background-size: cover; background-position: center;
+}
+.art-robotics {
+  background-image: linear-gradient(180deg, rgba(16,19,17,.04), rgba(16,19,17,.48)), url("../assets/images/robotics/ComfyUI_00104_.png");
+  background-size: cover; background-position: center 42%;
+}
 .card-body { position: relative; z-index: 2; margin-top: auto; padding: 0 28px 30px; }
 .card-body h3 { font-family: var(--serif); font-size: 32px; font-weight: 400; margin-bottom: 13px; }
 .card-body p { color: var(--muted); font-size: 13px; min-height: 84px; margin-bottom: 24px; }
