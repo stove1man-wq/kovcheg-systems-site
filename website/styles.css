@@ -231,8 +231,9 @@ h2 em { color: var(--copper); font-family: var(--serif); font-weight: 400; }
 .copyright { color: var(--muted-dark); font-size: 9px; }
 
 /* Motion */
-.reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
-.reveal.is-visible { opacity: 1; transform: translateY(0); }
+.reveal { opacity: 1; transform: none; }
+.js .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+.js .reveal.is-visible { opacity: 1; transform: translateY(0); }
 
 :focus-visible { outline: 2px solid var(--emerald-bright); outline-offset: 4px; }
 
