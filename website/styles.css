@@ -214,7 +214,6 @@ h2 em { color: var(--copper); font-family: var(--serif); font-weight: 400; }
 .about-mark { height: 360px; position: relative; display: grid; place-items: center; overflow: hidden; background: radial-gradient(ellipse, #27392d 0%, #19221b 45%, transparent 72%); }
 .about-mark::before, .about-mark::after { content: ""; position: absolute; width: 230px; height: 300px; border: 1px solid rgba(180,216,189,.38); border-radius: 48% 52% 65% 35%; transform: rotate(34deg); }
 .about-mark::after { width: 170px; height: 260px; border-color: rgba(189,138,98,.55); transform: rotate(-34deg); }
-.about-mark span { z-index: 1; color: rgba(238,233,221,.85); font-family: var(--serif); font-size: 60px; letter-spacing: -.08em; opacity: .75; }
 .about-mark i { position: absolute; width: 70px; height: 70px; background: radial-gradient(circle at 35% 35%, #d5e4cf, #71967a 65%, #36533e); border-radius: 55% 45% 60% 40%; box-shadow: 0 0 50px rgba(140,185,154,.25); }
 .about-copy h2 { margin-bottom: 28px; }
 .about-copy > p:not(.about-phrase) { color: var(--muted); font-size: 14px; max-width: 590px; }
