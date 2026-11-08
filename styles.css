@@ -61,7 +61,7 @@ h2 em { color: var(--copper); font-family: var(--serif); font-weight: 400; }
   margin-inline: auto; display: flex; align-items: center; justify-content: space-between;
 }
 .wordmark {
-  display: inline-flex; flex-direction: column; text-decoration: none;
+  display: inline-flex; flex-direction: row; align-items: center; gap: 14px; text-decoration: none;
   font-size: 15px; line-height: 1.05; letter-spacing: .2em; font-weight: 760;
 }
 .wordmark-light { color: var(--muted); font-size: 9px; letter-spacing: .42em; margin-top: 6px; font-weight: 500; }
@@ -84,7 +84,7 @@ h2 em { color: var(--copper); font-family: var(--serif); font-weight: 400; }
 }
 .hero-backdrop {
   position: absolute; inset: 0;
-  background-image: linear-gradient(90deg, rgba(12,16,13,.94) 0%, rgba(12,16,13,.72) 44%, rgba(12,16,13,.3) 100%), linear-gradient(0deg, rgba(16,19,17,.68), transparent 50%), url("../assets/images/backgrounds/ComfyUI_00177_.png");
+  background-image: linear-gradient(90deg, rgba(12,16,13,.94) 0%, rgba(12,16,13,.72) 44%, rgba(12,16,13,.3) 100%), linear-gradient(0deg, rgba(16,19,17,.68), transparent 50%), url("assets/images/backgrounds/ComfyUI_00177_.png");
   background-size: cover; background-position: center;
   opacity: .72;
 }
@@ -155,15 +155,15 @@ h2 em { color: var(--copper); font-family: var(--serif); font-weight: 400; }
 }
 .organic-art span, .organic-art i, .organic-art b { display: none; }
 .art-ai {
-  background-image: linear-gradient(180deg, rgba(16,19,17,.06), rgba(16,19,17,.58)), url("../assets/images/digital-ecosystems/ComfyUI_00098_.png");
+  background-image: linear-gradient(180deg, rgba(16,19,17,.06), rgba(16,19,17,.58)), url("assets/images/digital-ecosystems/ComfyUI_00098_.png");
   background-size: cover; background-position: center;
 }
 .art-eco {
-  background-image: linear-gradient(180deg, rgba(16,19,17,.02), rgba(16,19,17,.52)), url("../assets/images/digital-ecosystems/ComfyUI_00124_.png");
+  background-image: linear-gradient(180deg, rgba(16,19,17,.02), rgba(16,19,17,.52)), url("assets/images/digital-ecosystems/ComfyUI_00124_.png");
   background-size: cover; background-position: center;
 }
 .art-robotics {
-  background-image: linear-gradient(180deg, rgba(16,19,17,.04), rgba(16,19,17,.48)), url("../assets/images/robotics/ComfyUI_00104_.png");
+  background-image: linear-gradient(180deg, rgba(16,19,17,.04), rgba(16,19,17,.48)), url("assets/images/robotics/ComfyUI_00104_.png");
   background-size: cover; background-position: center 42%;
 }
 .card-body { position: relative; z-index: 2; margin-top: auto; padding: 0 28px 30px; }
@@ -334,3 +334,11 @@ h2 em { color: var(--copper); font-family: var(--serif); font-weight: 400; }
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* Знак бренда: корпус и два листа (два самостоятельных начала). Цвета берутся из палитры сайта. */
+.wordmark-text { display: inline-flex; flex-direction: column; }
+.brand-mark { width: 46px; height: 46px; flex: none; }
+.brand-mark-sm { width: 32px; height: 32px; }
+.m-hull { fill: var(--ivory); }
+.m-leaf-a { fill: var(--emerald); }
+.m-leaf-b { fill: var(--copper); }

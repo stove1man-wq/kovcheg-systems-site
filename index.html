@@ -1,394 +1,218 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Системы Ковчег — разработка искусственного интеллекта, цифровых экосистем и робототехнических решений">
-    <title>Системы Ковчег | Kovcheg Systems</title>
-
-    <!-- FAVICON -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230A0A0A%22/><text x=%2250%22 y=%2265%22 font-family=%22Arial%22 font-size=%2250%22 font-weight=%22bold%22 fill=%22%236366F1%22 text-anchor=%22middle%22>К</text></svg>">
-
-    <!-- OPEN GRAPH -->
-    <meta property="og:title" content="Системы Ковчег | Kovcheg Systems">
-    <meta property="og:description" content="Сквозь горизонт, сквозь время! Создаем AI, цифровые экосистемы и робототехнику.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://kovcheg-systems.ru">
-    <meta property="og:site_name" content="Системы Ковчег">
-
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --bg-primary: #0A0A0A;
-            --bg-secondary: #121212;
-            --text-primary: #EAEAEA;
-            --text-secondary: #888888;
-            --accent: #6366F1;
-            --accent-glow: rgba(99, 102, 241, 0.3);
-            --border: #2A2A2A;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* ФОНОВЫЙ ПОРТАЛ (ЧАСТИЦЫ) */
-        #portal-canvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at 50% 50%, #0a0a12 0%, #050505 100%);
-        }
-
-        /* АНИМАЦИЯ ПРОЯВЛЕНИЯ ИЗ ТУМАНА */
-        .reveal {
-            opacity: 0;
-            filter: blur(10px);
-            transform: translateY(40px);
-            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .reveal.active {
-            opacity: 1;
-            filter: blur(0px);
-            transform: translateY(0);
-        }
-
-        nav {
-            position: fixed; top: 0; width: 100%;
-            background: rgba(10, 10, 10, 0.85);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            z-index: 1000; padding: 1rem 0;
-        }
-        .nav-container {
-            max-width: 1200px; margin: 0 auto; padding: 0 2rem;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: 1px; color: var(--text-primary); }
-        .logo span { color: var(--accent); }
-        .nav-links { display: flex; gap: 2rem; list-style: none; }
-        .nav-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s; font-size: 0.95rem; }
-        .nav-links a:hover { color: var(--accent); }
-
-        .hero {
-            min-height: 100vh; display: flex; align-items: center; justify-content: center;
-            text-align: center; padding: 2rem; position: relative; overflow: hidden;
-        }
-        .hero-content { position: relative; z-index: 1; max-width: 800px; }
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800; letter-spacing: 2px; margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        }
-        .hero .tagline { font-size: clamp(1.2rem, 3vw, 1.8rem); color: var(--text-secondary); font-style: italic; margin-bottom: 2rem; }
-        .hero .description { font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 3rem; }
-
-        .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-        .btn {
-            padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s; display: inline-block; border: none; cursor: pointer; font-size: 1rem;
-        }
-        .btn-primary { background: var(--accent); color: white; border: 2px solid var(--accent); }
-        .btn-primary:hover { background: transparent; color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
-        .btn-secondary { background: transparent; color: var(--text-primary); border: 2px solid var(--border); }
-        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
-
-        section { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
-        .section-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; text-align: center; }
-        .section-subtitle { font-size: 1.2rem; color: var(--text-secondary); text-align: center; margin-bottom: 4rem; max-width: 600px; margin-left: auto; margin-right: auto; }
-
-        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
-        .project-card {
-            background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; transition: all 0.3s;
-        }
-        .project-card:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(99, 102, 241, 0.15); }
-        .project-icon { font-size: 3rem; margin-bottom: 1rem; }
-        .project-card h3 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--accent); }
-        .project-card p { color: var(--text-secondary); margin-bottom: 1.5rem; }
-        .project-features { list-style: none; margin-bottom: 1.5rem; }
-        .project-features li { padding: 0.5rem 0; color: var(--text-secondary); font-size: 0.95rem; }
-        .project-features li::before { content: '✓ '; color: var(--accent); font-weight: bold; }
-
-        .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 3rem; }
-        .tech-item { text-align: center; padding: 2rem; background: var(--bg-secondary); border-radius: 12px; border: 1px solid var(--border); }
-        .tech-item h4 { color: var(--accent); margin: 1rem 0; font-size: 1.2rem; }
-        .tech-item p { color: var(--text-secondary); font-size: 0.95rem; }
-
-        .contact-form-container {
-            background: var(--bg-secondary); border-radius: 12px; padding: 4rem 2rem; border: 1px solid var(--border); max-width: 600px; margin: 0 auto;
-        }
-        .form-group { margin-bottom: 1.5rem; text-align: left; }
-        .form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.9rem; }
-        .form-group input, .form-group textarea {
-            width: 100%; padding: 1rem; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 1rem; transition: border-color 0.3s;
-        }
-        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); }
-        .form-group textarea { resize: vertical; min-height: 120px; }
-
-        footer { text-align: center; padding: 2rem; border-top: 1px solid var(--border); color: var(--text-secondary); font-size: 0.9rem; }
-
-        @media (max-width: 768px) { .nav-links { display: none; } .hero h1 { font-size: 2rem; } .section-title { font-size: 2rem; } }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101311">
+  <meta name="description" content="KOVCHEG SYSTEMS — искусственный интеллект, цифровые экосистемы и робототехнические решения. Beyond the Horizon, Beyond Time!">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="KOVCHEG SYSTEMS — Beyond the Horizon, Beyond Time!">
+  <meta property="og:description" content="Создаём интеллектуальные системы, цифровые экосистемы и робототехнические решения.">
+  <link rel="icon" href="assets/brand/logo/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="48x48 32x32 16x16">
+  <link rel="apple-touch-icon" href="assets/brand/logo/apple-touch-icon.png">
+  <link rel="canonical" href="https://kovcheg-systems.ru/">
+  <meta property="og:url" content="https://kovcheg-systems.ru/">
+  <meta property="og:site_name" content="KOVCHEG SYSTEMS">
+  <meta property="og:image" content="https://kovcheg-systems.ru/assets/brand/logo/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="KOVCHEG SYSTEMS: Beyond the Horizon, Beyond Time!">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>KOVCHEG SYSTEMS — Beyond the Horizon, Beyond Time!</title>
+  <link rel="preload" as="image" href="assets/images/backgrounds/ComfyUI_00177_.png">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./script.js" defer></script>
 </head>
 <body>
-    <!-- ФОНОВЫЙ ПОРТАЛ -->
-    <canvas id="portal-canvas"></canvas>
+  <a class="skip-link" href="#main">Перейти к содержанию</a>
 
-    <nav>
-        <div class="nav-container">
-            <div class="logo">СИСТЕМЫ <span>КОВЧЕГ</span></div>
-            <ul class="nav-links">
-                <li><a href="#about">О компании</a></li>
-                <li><a href="#projects">Проекты</a></li>
-                <li><a href="#tech">Технологии</a></li>
-                <li><a href="#contact">Контакты</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <section class="hero">
-        <div class="hero-content reveal">
-            <h1>СИСТЕМЫ КОВЧЕГ</h1>
-            <p class="tagline">Сквозь горизонт, сквозь время!</p>
-            <p class="description">Мы создаем искусственный интеллект, цифровые экосистемы и робототехнические решения, которые работают всегда и везде. Даже там, где нет интернета.</p>
-            <div class="cta-buttons">
-                <a href="#projects" class="btn btn-primary">Наши проекты</a>
-                <a href="#contact" class="btn btn-secondary">Связаться</a>
-            </div>
-        </div>
-    </section>
-
-    <section id="about" class="reveal">
-        <h2 class="section-title">О компании</h2>
-        <p class="section-subtitle">Российская инновационная компания, создающая сквозные цифровые и робототехнические решения. Наши системы работают там, где другие сдаются.</p>
-        <div class="tech-grid">
-            <div class="tech-item"><div style="font-size: 2.5rem;">🔒</div><h4>Автономность</h4><p>Критически важные функции работают без интернета</p></div>
-            <div class="tech-item"><div style="font-size: 2.5rem;">🛡️</div><h4>Приватность</h4><p>Данные пользователя принадлежат только пользователю</p></div>
-            <div class="tech-item"><div style="font-size: 2.5rem;">🤖</div><h4>AI + Робототехника</h4><p>Синергия цифрового и физического мира</p></div>
-            <div class="tech-item"><div style="font-size: 2.5rem;">🌐</div><h4>Глубокая локализация</h4><p>От Калининграда до Камчатки</p></div>
-        </div>
-    </section>
-
-    <section id="projects" class="reveal">
-        <h2 class="section-title">Наши проекты</h2>
-        <p class="section-subtitle">Экосистема решений для цифровой трансформации России</p>
-        <div class="projects-grid">
-            <div class="project-card">
-                <div class="project-icon">🦊</div>
-                <h3>Barabashka</h3>
-                <p>Персональный голосовой AI-агент нового поколения</p>
-                <ul class="project-features">
-                    <li>100% офлайн-распознавание русской речи</li>
-                    <li>Мгновенное выполнение команд</li>
-                    <li>Живой 3D-аватар с характером</li>
-                    <li>Интеграция с такси, мессенджерами</li>
-                </ul>
-                <a href="barabashka.html" class="btn btn-secondary">Подробнее</a>
-            </div>
-            <div class="project-card">
-                <div class="project-icon">🗺️</div>
-                <h3>ARхипелаг</h3>
-                <p>Национальная цифровая туристическая экосистема</p>
-                <ul class="project-features">
-                    <li>8 модулей в одном приложении</li>
-                    <li>AI-гид и офлайн-карты</li>
-                    <li>AR-путеводители</li>
-                    <li>Аналитика для регионов</li>
-                </ul>
-                <a href="arhipelag.html" class="btn btn-secondary">Подробнее</a>
-            </div>
-        </div>
-    </section>
-
-    <section id="tech" class="reveal">
-        <h2 class="section-title">Наши технологии</h2>
-        <p class="section-subtitle">Технологический суверенитет и инновации</p>
-        <div class="tech-grid">
-            <div class="tech-item"><div style="font-size: 2.5rem;">⚡</div><h4>Офлайн-First</h4><p>Архитектура, работающая без интернета</p></div>
-            <div class="tech-item"><div style="font-size: 2.5rem;">🧠</div><h4>AI-ядро</h4><p>Собственные модели распознавания речи и NLP</p></div>
-            <div class="tech-item"><div style="font-size: 2.5rem;">🎭</div><h4>AR/VR</h4><p>Дополненная реальность для туризма и образования</p></div>
-            <div class="tech-item"><div style="font-size: 2.5rem;">🔐</div><h4>Безопасность</h4><p>Шифрование, 2FA, соответствие ФЗ-152</p></div>
-        </div>
-    </section>
-<!-- СЕКЦИЯ МАТЕРИАЛОВ ДЛЯ ПАРТНЕРОВ -->
-<section id="materials" class="reveal">
-    <h2 class="section-title">Материалы для партнеров</h2>
-    <p class="section-subtitle">Скачайте подробные презентации проектов для инвесторов и партнеров</p>
-    
-    <div class="projects-grid">
-        <div class="project-card">
-            <div class="project-icon">🗺️</div>
-            <h3>ARхипелаг</h3>
-            <p>Национальная цифровая туристическая экосистема. Полная презентация проекта.</p>
-            <a href="presentation.html" class="btn btn-primary" target="_blank">Скачать PDF</a>
-        </div>
-        <div class="project-card">
-            <div class="project-icon">🦊</div>
-            <h3>Barabashka</h3>
-            <p>Персональный голосовой AI-агент. Техническая презентация и возможности.</p>
-            <a href="barabashka-presentation.html" class="btn btn-primary" target="_blank">Скачать PDF</a>
-        </div>
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="wordmark" href="#top" aria-label="KOVCHEG SYSTEMS — на главную">
+        <svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path class="m-hull" d="M 17.34 52.57 A 34 34 0 1 0 82.66 52.57 A 35 35 0 0 1 17.34 52.57 Z"/><path class="m-leaf-a" d="M 50 68 C 50 50 40 40 22 38 C 22 56 34 68 50 68 Z"/><path class="m-leaf-b" d="M 50 68 C 50 44 60 24 82 16 C 84 44 70 64 50 68 Z"/></svg><span class="wordmark-text"><span>KOVCHEG</span><span class="wordmark-light">SYSTEMS</span></span>
+      </a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Открыть меню">
+        <span></span><span></span>
+      </button>
+      <nav class="primary-nav" id="primary-nav" aria-label="Основная навигация">
+        <a href="#directions">Направления</a>
+        <a href="#projects">Проекты</a>
+        <a href="#research">Исследования</a>
+        <a href="#about">О компании</a>
+        <a class="nav-contact" href="#contacts">Контакты <span aria-hidden="true">↗</span></a>
+      </nav>
     </div>
-</section>
-    <section id="contact" class="reveal">
-        <h2 class="section-title">Свяжитесь с нами</h2>
-        <p class="section-subtitle">Открыты для стратегического партнерства, грантовых программ и совместной цифровизации регионов</p>
-        
-        <div class="contact-form-container">
-            <!-- ⚠️ ВСТАВЬТЕ ВАШУ ССЫЛКУ FORMSPREE В АТРИБУТ action НИЖЕ ⚠️ -->
-            <form action="https://formspree.io/f/https://formspree.io/f/maeevaqp" method="POST">
-                <div class="form-group">
-                    <label for="name">Ваше имя</label>
-                    <input type="text" id="name" name="name" required placeholder="Иван Иванов">
-                </div>
-                <div class="form-group">
-                    <label for="email">Email для связи</label>
-                    <input type="email" id="email" name="email" required placeholder="ivan@company.ru">
-                </div>
-                <div class="form-group">
-                    <label for="message">Сообщение или запрос</label>
-                    <textarea id="message" name="message" required placeholder="Здравствуйте, меня интересует партнерство по проекту ARхипелаг..."></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Отправить запрос</button>
-            </form>
-            
-            <p style="margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-secondary); text-align: center;">
-                Или напишите нам напрямую: <a href="mailto:hello@kovcheg-systems.ru" style="color: var(--accent); text-decoration: none;">hello@kovcheg-systems.ru</a>
-            </p>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-backdrop" aria-hidden="true"></div>
+      <div class="hero-orbit hero-orbit-one" aria-hidden="true"></div>
+      <div class="hero-orbit hero-orbit-two" aria-hidden="true"></div>
+      <div class="hero-content reveal">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> INTELLIGENCE · SYSTEMS · ROBOTICS</p>
+        <h1 id="hero-title">Сквозь горизонт.<br><em>Сквозь время.</em></h1>
+        <p class="hero-lead">Создаём искусственный интеллект, цифровые экосистемы и робототехнические решения, объединяя цифровой и физический миры.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#directions">Исследовать направления <span aria-hidden="true">↘</span></a>
+          <a class="text-link" href="#projects">Наши проекты <span aria-hidden="true">→</span></a>
         </div>
+      </div>
+      <div class="hero-caption" aria-hidden="true"><span>01 / 03</span><span>BEYOND THE HORIZON</span></div>
+      <div class="hero-scroll" aria-hidden="true"><span></span> ЛИСТАЙТЕ ВНИЗ</div>
     </section>
 
-    <footer>
-        <p>© 2024–2026 Системы Ковчег (Kovcheg Systems). Все права защищены.</p>
-        <p style="margin-top: 0.5rem; font-style: italic;">Сквозь горизонт, сквозь время!</p>
-    </footer>
+    <section class="intro section-shell reveal" aria-labelledby="intro-title">
+      <div class="section-kicker">01 — НАША ИДЕЯ</div>
+      <div class="intro-copy">
+        <h2 id="intro-title">Технологии должны <span>открывать возможности.</span></h2>
+        <p>Мы рассматриваем интеллект, программные платформы и робототехнику как части единой развивающейся среды. Наша цель — создавать полезные системы, которые можно развивать, соединять и адаптировать к реальному миру.</p>
+      </div>
+      <div class="intro-note"><span class="note-line"></span><span>Living Intelligence<br>Эволюционный симбиоз</span></div>
+    </section>
 
-    <script>
-        // Плавная прокрутка
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            });
-        });
+    <section class="directions section-shell" id="directions" aria-labelledby="directions-title">
+      <div class="section-heading reveal">
+        <div>
+          <div class="section-kicker">02 — ЧЕМ МЫ ЗАНИМАЕМСЯ</div>
+          <h2 id="directions-title">Три направления.<br><span>Единая система.</span></h2>
+        </div>
+        <p>От цифрового интеллекта до физического взаимодействия — проектируем технологии как взаимосвязанные уровни.</p>
+      </div>
 
-        // Анимация появления из тумана
-        const observerOptions = { threshold: 0.15, rootMargin: '0px 0px -50px 0px' };
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
-        }, observerOptions);
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+      <div class="direction-grid">
+        <article class="direction-card direction-ai reveal">
+          <div class="card-index">01 / INTELLIGENCE</div>
+          <div class="organic-art art-ai" aria-hidden="true"><span></span><i></i><b></b></div>
+          <div class="card-body">
+            <h3>AI Systems</h3>
+            <p>Интеллектуальные системы и агенты, которые помогают анализировать, создавать и действовать. В центре внимания — надёжность, управляемость и практическая польза.</p>
+            <a class="arrow-link" href="#research" aria-label="Узнать о направлении AI Systems">Исследовать <span aria-hidden="true">↗</span></a>
+          </div>
+        </article>
 
-        // ИНТЕРАКТИВНЫЙ ПОРТАЛ (ЧАСТИЦЫ)
-        const canvas = document.getElementById('portal-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        let mouse = { x: null, y: null, radius: 150 };
+        <article class="direction-card direction-eco reveal">
+          <div class="card-index">02 / CONNECTION</div>
+          <div class="organic-art art-eco" aria-hidden="true"><span></span><i></i><b></b></div>
+          <div class="card-body">
+            <h3>Digital Ecosystems</h3>
+            <p>Связанные цифровые продукты и среды, в которых данные, сервисы, приложения и устройства работают как согласованное целое.</p>
+            <a class="arrow-link" href="#projects" aria-label="Узнать о цифровых экосистемах">Исследовать <span aria-hidden="true">↗</span></a>
+          </div>
+        </article>
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+        <article class="direction-card direction-robotics reveal">
+          <div class="card-index">03 / EMBODIMENT</div>
+          <div class="organic-art art-robotics" aria-hidden="true"><span></span><i></i><b></b></div>
+          <div class="card-body">
+            <h3>Robotics</h3>
+            <p>Робототехнические решения на пересечении программного интеллекта, сенсорики, управления и физического взаимодействия.</p>
+            <a class="arrow-link" href="#research" aria-label="Узнать о направлении Robotics">Исследовать <span aria-hidden="true">↗</span></a>
+          </div>
+        </article>
+      </div>
+    </section>
 
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.x;
-            mouse.y = e.y;
-        });
-        window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
+    <section class="manifesto" aria-labelledby="manifesto-title">
+      <div class="manifesto-text reveal">
+        <div class="section-kicker">A LIVING CONTINUUM</div>
+        <h2 id="manifesto-title">Не отдельные инструменты.<br><em>Связанные возможности.</em></h2>
+        <p>Мы ищем точки взаимодействия человека и технологий, цифровой среды и физического мира, сегодняшних решений и завтрашних задач.</p>
+      </div>
+      <div class="manifesto-visual" aria-hidden="true">
+        <div class="continuum continuum-a"></div>
+        <div class="continuum continuum-b"></div>
+        <div class="continuum-core"></div>
+        <span class="visual-label label-top">HUMAN</span>
+        <span class="visual-label label-bottom">MACHINE</span>
+      </div>
+    </section>
 
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 1.5 + 0.5;
-                this.speedX = (Math.random() - 0.5) * 0.3;
-                this.speedY = (Math.random() - 0.5) * 0.3;
-                this.density = (Math.random() * 30) + 1;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
+    <section class="projects section-shell" id="projects" aria-labelledby="projects-title">
+      <div class="section-heading reveal">
+        <div>
+          <div class="section-kicker">03 — В РАЗРАБОТКЕ</div>
+          <h2 id="projects-title">Идеи обретают <span>форму.</span></h2>
+        </div>
+        <p>Проекты — практическое выражение нашей философии. Здесь будут появляться разработки, эксперименты и работающие прототипы.</p>
+      </div>
 
-                // Реакция на мышь (разгон частиц)
-                if (mouse.x != null) {
-                    let dx = mouse.x - this.x;
-                    let dy = mouse.y - this.y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
+      <div class="project-grid">
+        <article class="project-card project-feature reveal">
+          <a class="project-image" href="assets/images/projects/Барабашка_ Неоновый цифровой помощник.png" target="_blank" rel="noreferrer" aria-label="Открыть изображение проекта Барабашка">
+            <img src="assets/images/projects/Барабашка_ Неоновый цифровой помощник.png" alt="Визуальная концепция цифрового помощника Барабашка" loading="lazy">
+            <span class="image-open" aria-hidden="true">↗</span>
+          </a>
+          <div class="project-info">
+            <div class="project-meta"><span>AI COMPANION</span><span>01</span></div>
+            <h3>Барабашка</h3>
+            <p>Цифровой помощник с выразительным аватаром и интерфейсом взаимодействия с интеллектуальным агентом.</p>
+            <span class="status-label"><i></i> Визуальная концепция</span>
+          </div>
+        </article>
 
-                    if (distance < mouse.radius) {
-                        let force = (mouse.radius - distance) / mouse.radius;
-                        let directionX = dx / distance;
-                        let directionY = dy / distance;
-                        this.x -= directionX * force * this.density * 0.8;
-                        this.y -= directionY * force * this.density * 0.8;
-                    }
-                }
+        <article class="project-card reveal">
+          <a class="project-image" href="assets/images/projects/900.jpg" target="_blank" rel="noreferrer" aria-label="Открыть изображение проекта ARхипелаг">
+            <img src="assets/images/projects/900.jpg" alt="Сцена дополненной реальности в горном маршруте проекта ARхипелаг" loading="lazy">
+            <span class="image-open" aria-hidden="true">↗</span>
+          </a>
+          <div class="project-info">
+            <div class="project-meta"><span>DIGITAL EXPERIENCE</span><span>02</span></div>
+            <h3>ARхипелаг</h3>
+            <p>Исследование цифрового пространства и новых способов взаимодействия с виртуальными мирами.</p>
+            <span class="status-label"><i></i> Проектный материал</span>
+          </div>
+        </article>
+      </div>
+      <p class="projects-footnote">Статусы и описания будут уточняться по мере развития проектов. Представленные изображения — визуальные материалы проектов, а не утверждённые элементы фирменного знака.</p>
+    </section>
 
-                if (this.x < 0) this.x = canvas.width;
-                if (this.x > canvas.width) this.x = 0;
-                if (this.y < 0) this.y = canvas.height;
-                if (this.y > canvas.height) this.y = 0;
-            }
-            draw() {
-                ctx.fillStyle = 'rgba(99, 102, 241, 0.5)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.closePath();
-                ctx.fill();
-            }
-        }
+    <section class="research" id="research" aria-labelledby="research-title">
+      <div class="research-inner section-shell">
+        <div class="section-kicker">04 — ВЗГЛЯД ВПЕРЁД</div>
+        <div class="research-layout">
+          <div class="research-heading reveal">
+            <h2 id="research-title">Исследовать.<br><span>Соединять.</span><br>Создавать.</h2>
+          </div>
+          <div class="research-copy reveal">
+            <p class="research-lead">Будущее не появляется само по себе. Оно складывается из вопросов, экспериментов и системных решений.</p>
+            <ul class="research-list">
+              <li><span>01</span><div><strong>Автономный интеллект</strong><small>Агентные системы, локальное выполнение, надёжность.</small></div></li>
+              <li><span>02</span><div><strong>Системная интеграция</strong><small>Объединение данных, программных платформ и устройств.</small></div></li>
+              <li><span>03</span><div><strong>Человек и технологии</strong><small>Естественные интерфейсы и совместная работа.</small></div></li>
+              <li><span>04</span><div><strong>Интеллект в физическом мире</strong><small>Робототехника, сенсорика и адаптивное управление.</small></div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        function initParticles() {
-            particles = [];
-            let numberOfParticles = Math.min((canvas.width * canvas.height) / 10000, 200);
-            for (let i = 0; i < numberOfParticles; i++) {
-                particles.push(new Particle());
-            }
-        }
-        initParticles();
+    <section class="about section-shell" id="about" aria-labelledby="about-title">
+      <div class="about-mark reveal" aria-hidden="true"><i></i></div>
+      <div class="about-copy reveal">
+        <div class="section-kicker">05 — KOVCHEG SYSTEMS</div>
+        <h2 id="about-title">Создавать то,<br>что <em>остаётся.</em></h2>
+        <p>KOVCHEG SYSTEMS объединяет проекты и исследования в области искусственного интеллекта, цифровых экосистем и робототехники. Мы стремимся строить не набор разрозненных функций, а развиваемые системы с ясной архитектурой и долгосрочной ценностью.</p>
+        <p class="about-phrase">Beyond the Horizon, Beyond Time!</p>
+      </div>
+    </section>
 
-        function connectParticles() {
-            for (let a = 0; a < particles.length; a++) {
-                for (let b = a; b < particles.length; b++) {
-                    let distance = ((particles[a].x - particles[b].x) ** 2) + ((particles[a].y - particles[b].y) ** 2);
-                    if (distance < 12000) {
-                        let opacity = 1 - (distance / 12000);
-                        ctx.strokeStyle = `rgba(99, 102, 241, ${opacity * 0.2})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[a].x, particles[a].y);
-                        ctx.lineTo(particles[b].x, particles[b].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-        }
+    <section class="contact-section" id="contacts" aria-labelledby="contacts-title">
+      <div class="contact-inner section-shell reveal">
+        <div class="section-kicker">06 — СЛЕДУЮЩИЙ ШАГ</div>
+        <h2 id="contacts-title">Горизонт открыт.</h2>
+        <p>Мы продолжаем создавать и исследовать. Информация для деловых обращений появится здесь после подключения официального канала связи.</p>
+        <a class="text-link" href="#top">Вернуться наверх <span aria-hidden="true">↑</span></a>
+      </div>
+      <div class="contact-orb" aria-hidden="true"></div>
+    </section>
+  </main>
 
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-            }
-            connectParticles();
-            requestAnimationFrame(animateParticles);
-        }
-        animateParticles();
-
-        window.addEventListener('resize', () => {
-            resizeCanvas();
-            initParticles();
-        });
-    </script>
+  <footer class="site-footer">
+    <a class="wordmark footer-wordmark" href="#top" aria-label="KOVCHEG SYSTEMS — наверх"><svg class="brand-mark brand-mark-sm" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path class="m-hull" d="M 17.34 52.57 A 34 34 0 1 0 82.66 52.57 A 35 35 0 0 1 17.34 52.57 Z"/><path class="m-leaf-a" d="M 50 68 C 50 50 40 40 22 38 C 22 56 34 68 50 68 Z"/><path class="m-leaf-b" d="M 50 68 C 50 44 60 24 82 16 C 84 44 70 64 50 68 Z"/></svg><span class="wordmark-text"><span>KOVCHEG</span><span class="wordmark-light">SYSTEMS</span></span></a>
+    <p>Beyond the Horizon, Beyond Time!</p>
+    <span class="copyright">© <span data-current-year>2026</span> KOVCHEG SYSTEMS</span>
+  </footer>
 </body>
 </html>
