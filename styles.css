@@ -197,6 +197,10 @@ h2 em { color: var(--copper); font-family: var(--serif); font-weight: 400; }
 .project-card { background: #171d19; border: 1px solid var(--line); min-width: 0; }
 .project-image { display: block; position: relative; height: 310px; overflow: hidden; background: #222a24; }
 .project-feature .project-image { height: 390px; }
+.project-emblem { display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 45%, #1c2a2f 0%, #101311 70%); }
+.project-image.project-emblem img { width: auto; height: 74%; max-width: 70%; object-fit: contain; }
+.project-emblem:hover img { transform: none; }
+.project-wide { grid-column: 1 / -1; }
 .project-image img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .7s cubic-bezier(.2,.7,.2,1); }
 .project-image:hover img { transform: scale(1.035); }
 .image-open { position: absolute; right: 18px; top: 18px; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; color: var(--ink); background: var(--ivory); }
