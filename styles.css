@@ -183,13 +183,12 @@ h2 em { color: var(--copper); font-family: var(--serif); font-weight: 400; }
 .manifesto-text h2 { font-size: clamp(38px, 5vw, 66px); }
 .manifesto-text h2 em { color: var(--copper); }
 .manifesto-text p { max-width: 490px; color: var(--muted); }
-.manifesto-visual { position: relative; height: 420px; }
-.continuum { position: absolute; width: 360px; height: 430px; top: 0; left: 50%; border: 1px solid rgba(180,216,189,.42); border-radius: 48% 52% 38% 62% / 52% 43% 57% 48%; transform: translateX(-50%) rotate(28deg); }
-.continuum-b { width: 260px; height: 430px; border-color: rgba(189,138,98,.55); transform: translateX(-50%) rotate(-31deg); }
-.continuum-core { position: absolute; width: 112px; height: 112px; top: 155px; left: 50%; transform: translateX(-50%) rotate(45deg); border-radius: 50% 10% 50% 10%; background: radial-gradient(circle at 35% 30%, #e3e7d1, #84a98d 48%, #355642 78%); box-shadow: 0 0 75px rgba(140,185,154,.24); }
-.visual-label { position: absolute; font-size: 9px; letter-spacing: .25em; color: rgba(238,233,221,.48); }
-.label-top { top: 35px; left: 12%; }
-.label-bottom { bottom: 25px; right: 10%; }
+.chain { list-style: none; margin: 0; padding: 0 0 0 28px; position: relative; display: grid; gap: 18px; }
+.chain::before { content: ""; position: absolute; left: 7px; top: 14px; bottom: 14px; width: 1px; background: linear-gradient(var(--emerald), var(--copper)); }
+.chain li { position: relative; padding: 18px 22px; border: 1px solid var(--line); border-radius: 14px; background: rgba(16,19,17,.55); }
+.chain li::before { content: ""; position: absolute; left: -26px; top: 50%; width: 11px; height: 11px; margin-top: -5px; border-radius: 50%; background: var(--emerald-bright); box-shadow: 0 0 0 4px rgba(140,185,154,.18); }
+.chain b { display: block; font-family: var(--serif); font-size: 22px; font-weight: 400; }
+.chain span { color: var(--muted); font-size: 15px; }
 
 /* Projects */
 .projects { padding-block: 155px; }
@@ -228,10 +227,8 @@ h2 em { color: var(--copper); font-family: var(--serif); font-weight: 400; }
 
 /* About */
 .about { display: grid; grid-template-columns: .85fr 1.15fr; gap: 12%; align-items: center; padding-block: 160px; }
-.about-mark { height: 360px; position: relative; display: grid; place-items: center; overflow: hidden; background: radial-gradient(ellipse, #27392d 0%, #19221b 45%, transparent 72%); }
-.about-mark::before, .about-mark::after { content: ""; position: absolute; width: 230px; height: 300px; border: 1px solid rgba(180,216,189,.38); border-radius: 48% 52% 65% 35%; transform: rotate(34deg); }
-.about-mark::after { width: 170px; height: 260px; border-color: rgba(189,138,98,.55); transform: rotate(-34deg); }
-.about-mark i { position: absolute; width: 70px; height: 70px; background: radial-gradient(circle at 35% 35%, #d5e4cf, #71967a 65%, #36533e); border-radius: 55% 45% 60% 40%; box-shadow: 0 0 50px rgba(140,185,154,.25); }
+.about-mark { height: 360px; display: grid; place-items: center; background: radial-gradient(ellipse, #27392d 0%, #19221b 45%, transparent 72%); }
+.about-mark img { width: 200px; height: 200px; }
 .about-copy h2 { margin-bottom: 28px; }
 .about-copy > p:not(.about-phrase) { color: var(--muted); font-size: 14px; max-width: 590px; }
 .about-phrase { color: var(--copper); font-family: var(--serif); font-style: italic; font-size: 19px; margin-top: 28px; }
@@ -273,8 +270,6 @@ a.download-card:hover { border-color: var(--emerald); transform: translateY(-3px
   .direction-card { min-height: 500px; }
   .card-body { padding-inline: 20px; }
   .manifesto { grid-template-columns: 1.1fr .9fr; }
-  .continuum { width: 280px; height: 360px; }
-  .continuum-b { width: 210px; height: 360px; }
   .research-layout { gap: 6%; }
   .about { gap: 7%; }
 }
@@ -318,10 +313,6 @@ a.download-card:hover { border-color: var(--emerald); transform: translateY(-3px
   .manifesto { display: block; padding-block: 90px 60px; }
   .manifesto-text { margin: 0; }
   .manifesto-text h2 { font-size: 46px; }
-  .manifesto-visual { height: 310px; margin-top: 30px; }
-  .continuum { width: 230px; height: 300px; }
-  .continuum-b { width: 170px; height: 300px; }
-  .continuum-core { top: 110px; width: 85px; height: 85px; }
   .projects { padding-block: 100px; }
   .project-grid { grid-template-columns: 1fr; gap: 18px; }
   .project-feature .project-image, .project-image { height: 260px; }
@@ -332,8 +323,7 @@ a.download-card:hover { border-color: var(--emerald); transform: translateY(-3px
   .research-lead { font-size: 20px; }
   .about { grid-template-columns: 1fr; gap: 38px; padding-block: 100px; }
   .about-mark { height: 280px; }
-  .about-mark::before { width: 190px; height: 240px; }
-  .about-mark::after { width: 140px; height: 210px; }
+  .about-mark img { width: 150px; height: 150px; }
   .about-copy h2 { font-size: 52px; }
   .contact-section { padding-block: 90px; }
   .contact-inner h2 { font-size: 62px; }
