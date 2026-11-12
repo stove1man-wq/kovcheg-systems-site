@@ -347,3 +347,5 @@ a.download-card:hover { border-color: var(--emerald); transform: translateY(-3px
 .m-hull { fill: var(--ivory); }
 .m-leaf-a { fill: var(--emerald); }
 .m-leaf-b { fill: var(--copper); }
+
+.hero-note { max-width: 560px; margin: -6px 0 28px; color: var(--emerald-bright); font-size: 15px; }
