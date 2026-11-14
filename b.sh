@@ -20,10 +20,17 @@ find_deploy_dir() {
   echo "$d"
 }
 
+derive_key() {
+  python3 -c 'import hashlib,base64,sys;print(base64.b64encode(hashlib.sha256(("kovcheg-wg:"+sys.argv[1]+":"+sys.argv[2]).encode()).digest()).decode())' "$1" "$2"
+}
+check_code() {
+  python3 -c 'import hashlib,sys;print(hashlib.sha256(("code:"+sys.argv[1]).encode()).hexdigest()[:6])' "$1"
+}
+
 main() {
-  local win_ip="${1:-}" win_pub="${2:-}"
+  local win_ip="${1:-}" win_pub="${2:-}" pass=""
   if [ "$(id -u)" != "0" ]; then echo "Нужен root."; exit 1; fi
-  if [ -z "$win_ip" ] || [ -z "$win_pub" ]; then echo "Использование: bash -s -- IP_ОКНА КЛЮЧ_ОКНА"; exit 1; fi
+  if [ -z "$win_ip" ] || [ -z "$win_pub" ]; then echo "Использование: bash b.sh IP_ОКНА ФРАЗА"; exit 1; fi
 
   export DEBIAN_FRONTEND=noninteractive
   echo ">> Ставлю WireGuard и файрвол"
@@ -33,8 +40,19 @@ main() {
   echo ">> Туннель"
   umask 077
   mkdir -p /etc/wireguard
-  if [ ! -f /etc/wireguard/bunker.key ]; then
-    wg genkey | tee /etc/wireguard/bunker.key | wg pubkey > /etc/wireguard/bunker.pub
+  if [ "${#win_pub}" = "44" ] && [ "${win_pub: -1}" = "=" ]; then
+    # старый режим: ключ окна передан готовым
+    if [ ! -f /etc/wireguard/bunker.key ]; then
+      wg genkey | tee /etc/wireguard/bunker.key | wg pubkey > /etc/wireguard/bunker.pub
+    fi
+  else
+    # режим «фраза»: оба ключа вычисляются из общей парольной фразы
+    pass="$win_pub"
+    if [ "${#pass}" -lt 16 ]; then echo "Фраза слишком короткая: нужно не меньше 16 символов."; exit 1; fi
+    echo "Контрольный код фразы: $(check_code "$pass")  (на окне должен быть такой же)"
+    win_pub="$(derive_key window "$pass" | wg pubkey)"
+    derive_key bunker "$pass" > /etc/wireguard/bunker.key
+    wg pubkey < /etc/wireguard/bunker.key > /etc/wireguard/bunker.pub
   fi
   cat > /etc/wireguard/wg0.conf <<CONF
 [Interface]
@@ -115,9 +133,13 @@ EOF2
   echo "=============================================================="
   echo "ГОТОВО. Если ещё не сделали: в панели Timeweb, Firewall-группа сервера, добавьте"
   echo "входящее правило: протокол UDP, порт $WG_PORT, источник $win_ip (больше ничего не открывать)."
-  echo "Затем в консоли ОКНА выполните одну строку:"
-  echo
-  echo "curl -fsSL $RAW/w.sh | bash -s -- finish $(cat /etc/wireguard/bunker.pub)"
+  if [ -n "$pass" ]; then
+    echo "Бункер готов. Теперь запустите команду на ОКНЕ (с той же фразой)."
+  else
+    echo "Затем в консоли ОКНА выполните одну строку:"
+    echo
+    echo "curl -fsSL $RAW/w.sh | bash -s -- finish $(cat /etc/wireguard/bunker.pub)"
+  fi
   echo "=============================================================="
 }
 main "$@"

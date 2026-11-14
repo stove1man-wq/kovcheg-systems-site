@@ -19,6 +19,15 @@ own_ip() {
   ip -4 route get 1.1.1.1 2>/dev/null | awk '{for(i=1;i<=NF;i++) if($i=="src") {print $(i+1); exit}}'
 }
 
+
+# Ключи туннеля из общей парольной фразы: оба сервера вычисляют их сами, переносить ключи не нужно.
+derive_key() {  # derive_key ИМЯ ФРАЗА -> приватный ключ (base64, 32 байта)
+  python3 -c 'import hashlib,base64,sys;print(base64.b64encode(hashlib.sha256(("kovcheg-wg:"+sys.argv[1]+":"+sys.argv[2]).encode()).digest()).decode())' "$1" "$2"
+}
+check_code() {  # короткий контрольный код фразы: должен совпасть на обоих серверах
+  python3 -c 'import hashlib,sys;print(hashlib.sha256(("code:"+sys.argv[1]).encode()).hexdigest()[:6])' "$1"
+}
+
 install_base() {
   export DEBIAN_FRONTEND=noninteractive
   apt-get update -qq </dev/null
@@ -47,6 +56,23 @@ prepare() {
   echo
   echo "curl -fsSL $RAW/b.sh | bash -s -- $ip $pub"
   echo "=============================================================="
+}
+
+# Режим «go»: одна команда на окне, ключи из парольной фразы.
+go() {
+  local domain="${1:-}" bunker_ip="${2:-}" pass="${3:-}"
+  if [ -z "$domain" ] || [ -z "$bunker_ip" ] || [ -z "$pass" ]; then echo "Использование: bash w.sh go api.ДОМЕН IP_БУНКЕРА ФРАЗА"; exit 1; fi
+  if [ "${#pass}" -lt 16 ]; then echo "Фраза слишком короткая: нужно не меньше 16 символов (латиница, цифры, дефисы)."; exit 1; fi
+  install_base
+  apt-get install -y -qq python3 </dev/null
+  umask 077
+  mkdir -p /etc/wireguard
+  derive_key window "$pass" > /etc/wireguard/window.key
+  wg pubkey < /etc/wireguard/window.key > /etc/wireguard/window.pub
+  local bpub; bpub="$(derive_key bunker "$pass" | wg pubkey)"
+  printf 'DOMAIN=%s\nBUNKER_IP=%s\n' "$domain" "$bunker_ip" > "$STATE"
+  echo "Контрольный код фразы: $(check_code "$pass")  (на бункере должен быть такой же)"
+  finish "$bpub"
 }
 
 finish() {
@@ -141,7 +167,8 @@ main() {
   case "${1:-}" in
     prepare) shift; prepare "$@" ;;
     finish)  shift; finish "$@" ;;
-    *) echo "Режимы: prepare api.ДОМЕН IP_БУНКЕРА | finish КЛЮЧ_БУНКЕРА"; exit 1 ;;
+    go)      shift; go "$@" ;;
+    *) echo "Режимы: go api.ДОМЕН IP_БУНКЕРА ФРАЗА | prepare ... | finish ..."; exit 1 ;;
   esac
 }
 main "$@"
