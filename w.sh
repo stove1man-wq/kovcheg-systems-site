@@ -24,8 +24,9 @@ install_base() {
   apt-get update -qq </dev/null
   apt-get install -y -qq wireguard curl ca-certificates ufw </dev/null
   if ! command -v docker >/dev/null 2>&1; then
-    echo ">> Ставлю Docker"
-    curl -fsSL https://get.docker.com | sh </dev/null
+    echo ">> Ставлю Docker (из репозитория Ubuntu)"
+    apt-get install -y -qq docker.io docker-compose-v2 </dev/null
+    systemctl enable --now docker >/dev/null 2>&1 || true
   fi
 }
 
