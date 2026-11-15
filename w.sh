@@ -144,11 +144,7 @@ EOF2
   docker compose up -d </dev/null
 
   # Наружу только 80 и 443 (https и выдача сертификата). SSH закрыт, работа через веб-консоль.
-  ufw default deny incoming >/dev/null
-  ufw default allow outgoing >/dev/null
-  ufw allow 80/tcp >/dev/null
-  ufw allow 443/tcp >/dev/null
-  ufw --force enable >/dev/null
+  harden
 
   echo ">> Жду https (сертификат выдаётся до минуты)"
   for _ in $(seq 1 24); do
@@ -162,12 +158,25 @@ EOF2
   exit 1
 }
 
+# Режим «harden»: оставить на окне открытыми только 80 и 443 (шаблон образа добавляет 22 и порт панели ISPmanager).
+harden() {
+  ufw --force reset >/dev/null
+  ufw default deny incoming >/dev/null
+  ufw default allow outgoing >/dev/null
+  ufw allow 80/tcp >/dev/null
+  ufw allow 443/tcp >/dev/null
+  ufw --force enable >/dev/null
+  echo "Файрвол окна: открыты только 80 и 443."
+  ufw status | head -8
+}
+
 main() {
   if [ "$(id -u)" != "0" ]; then echo "Нужен root."; exit 1; fi
   case "${1:-}" in
     prepare) shift; prepare "$@" ;;
     finish)  shift; finish "$@" ;;
     go)      shift; go "$@" ;;
+    harden)  harden ;;
     *) echo "Режимы: go api.ДОМЕН IP_БУНКЕРА ФРАЗА | prepare ... | finish ..."; exit 1 ;;
   esac
 }
