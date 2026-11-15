@@ -170,6 +170,50 @@ harden() {
   ufw status | head -8
 }
 
+# Режим «site»: подключить ещё один домен (например axel.doroga-bunker.ru) к другому порту бункера в туннеле.
+# Использование: bash w.sh site ДОМЕН [ПОРТ]   (порт по умолчанию 8090). Повторный запуск безопасен.
+site() {
+  local domain="${1:-}" port="${2:-8090}"
+  if [ -z "$domain" ]; then echo "Использование: bash w.sh site ДОМЕН [ПОРТ]"; exit 1; fi
+  if [ ! -f "$APP/Caddyfile" ]; then echo "Окно ещё не настроено (нет $APP/Caddyfile): сначала w.sh go."; exit 1; fi
+  local dns_ip; dns_ip="$(getent ahostsv4 "$domain" | awk 'NR==1{print $1}')"
+  if [ "$dns_ip" != "$(own_ip)" ]; then
+    echo "ВНИМАНИЕ: $domain указывает на '${dns_ip:-ничего}', а IP окна $(own_ip). Пока запись не обновится, сертификат не выдастся."
+  fi
+  if grep -q "^$domain {" "$APP/Caddyfile"; then
+    echo "Домен $domain уже подключён."
+  else
+    cat >> "$APP/Caddyfile" <<EOF2
+
+$domain {
+	request_body {
+		max_size 600MB
+	}
+	reverse_proxy http://$BUN_TUN:$port {
+		flush_interval -1
+		transport http {
+			dial_timeout 10s
+			response_header_timeout 300s
+		}
+	}
+}
+EOF2
+  fi
+  cd "$APP"
+  docker compose exec -T caddy caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile </dev/null
+  docker compose exec -T caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile </dev/null
+  echo ">> Жду https для $domain (сертификат выдаётся до минуты)"
+  for _ in $(seq 1 24); do
+    if curl -fsS -m 8 "https://$domain/health" 2>/dev/null; then
+      echo; echo "ГОТОВО: https://$domain работает через туннель до бункера."
+      exit 0
+    fi
+    sleep 5
+  done
+  echo "https не ответил. Проверьте A-запись $domain -> IP окна и что бункер ответил ГОТОВО. Логи: docker compose -f $APP/docker-compose.yml logs --tail 30"
+  exit 1
+}
+
 main() {
   if [ "$(id -u)" != "0" ]; then echo "Нужен root."; exit 1; fi
   case "${1:-}" in
@@ -177,7 +221,8 @@ main() {
     finish)  shift; finish "$@" ;;
     go)      shift; go "$@" ;;
     harden)  harden ;;
-    *) echo "Режимы: go api.ДОМЕН IP_БУНКЕРА ФРАЗА | prepare ... | finish ..."; exit 1 ;;
+    site)    shift; site "$@" ;;
+    *) echo "Режимы: go api.ДОМЕН IP_БУНКЕРА ФРАЗА | site ДОМЕН [ПОРТ] | harden | prepare ... | finish ..."; exit 1 ;;
   esac
 }
 main "$@"
